@@ -2,7 +2,6 @@ import db from "./models";
 const config = require(__dirname + "/config/config.js");
 const app = require("./src/app");
 
-import { validateNewPet } from "./src/auxiliary/AnimalValidators";
 import { animalSeeds } from "./seeders/animal-seeds";
 import { users } from "./seeders/users-seed";
 

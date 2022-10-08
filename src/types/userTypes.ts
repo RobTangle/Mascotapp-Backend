@@ -5,7 +5,7 @@ import { ITransaction } from "./transactionTypes";
 export interface IUserAttributes {
   id: string;
   email: string;
-  name: string | undefined;
+  name: string;
   city: string | undefined;
   contact: string | undefined;
   image: string | undefined;

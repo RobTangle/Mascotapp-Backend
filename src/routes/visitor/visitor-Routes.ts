@@ -1,6 +1,6 @@
 import { Router } from "express";
-import db from "../../models/index";
-import { visitor } from "../types/visitorTypes";
+import db from "../../../models/index";
+import { visitor } from "../../types/visitorTypes";
 const { GMAIL_PASS, GMAIL_USER } = process.env;
 
 const route = Router();

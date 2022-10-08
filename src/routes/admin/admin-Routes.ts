@@ -1,54 +1,18 @@
 import { Router } from "express";
 import dotenv from "dotenv";
 import { Op } from "sequelize";
-import db from "../../models/index";
-import { transactionStatus } from "../types/transactionTypes";
-import jwtCheck from "../../config/jwtMiddleware";
-import { IUserAttributes } from "../types/userTypes";
-import { getAllUsers } from "./users";
-import { getAllPets } from "./pets";
-import { IAdminAction } from "../types/adminActionTypes";
+import db from "../../../models";
+import jwtCheck from "../../../config/jwtMiddleware";
+import { IAdminAction } from "../../types/adminActionTypes";
+import { IUserAttributes } from "../../types/userTypes";
+import { transactionStatus } from "../../types/transactionTypes";
+import { getAllPets } from "../pet/petAuxFn";
+import { getAllUsers } from "../user/userAuxFn";
+import { getAllReviewsToUser, getPostsOfUser } from "./adminAuxFn";
+
 dotenv.config();
 
 const router = Router();
-
-// -------- FUNCIONES AUXILIARES : ---------
-
-// GET ALL REVIEWS TO USER by id
-async function getAllReviewsToUser(id: any) {
-  try {
-    let allReviewsToUser = await db.Review.findAll({
-      where: {
-        UserId: id,
-      },
-    });
-    console.log(`reviews al User encontradas: ${allReviewsToUser.length}`);
-    return allReviewsToUser;
-  } catch (error) {
-    console.log(`Error en function getAllReviewsToUser en /admin/`);
-    throw new Error(`Error al buscar las reviews que el usuario recibió.`);
-  }
-}
-
-// GET POSTS OF USER by id
-async function getPostsOfUser(id: any) {
-  console.log(`En getPostsOfUser...`);
-  try {
-    console.log(`id ingresado como argumento: ${id}`);
-    let postsOfUser = await db.Animal.findAll({
-      where: {
-        UserId: id,
-      },
-    });
-    console.log(
-      `Encontrados ${postsOfUser?.length} posts con el id ingresado.`
-    );
-    return postsOfUser;
-  } catch (error: any) {
-    console.log(`Error en getPostsOfUser: ${error.message}`);
-    throw new Error(`${error.message}`);
-  }
-}
 
 //---------------------- RUTAS: -----------------------------
 
@@ -84,7 +48,6 @@ router.post("/deleteUser", jwtCheck, async (req: any, res) => {
         .status(403)
         .send(`La password de administrador "${passwordFromReq}" no es válida`);
     }
-
     let userToBeDeleted = await db.User.findOne({
       where: {
         [Op.and]: [{ id: idFromReq }, { email: emailFromReq }],
@@ -144,7 +107,6 @@ router.post("/cleanPostsOfUserId", jwtCheck, async (req: any, res) => {
       console.log(
         `La password de administrador ${passwordFromReq} no es válida`
       );
-
       return res
         .status(403)
         .send(`La password de administrador "${passwordFromReq}" no es válida`);
@@ -222,7 +184,6 @@ router.post("/cleanReviewsToUser", jwtCheck, async (req: any, res) => {
     console.log(
       `Empezando a borrar reviews... Reviews por borrar: ${allReviewsToUser.length}`
     );
-
     for (const review of allReviewsToUser) {
       await review.destroy();
       console.log("Review borrada...");
@@ -242,7 +203,6 @@ router.post("/cleanReviewsToUser", jwtCheck, async (req: any, res) => {
     return res.status(404).send(error.message);
   }
 });
-
 // DELETE PETS WITH NO UserId
 router.post("/deletePetsWithNoUserId", jwtCheck, async (req: any, res) => {
   console.log(`En ruta /admin/deletePetsWithNoUserId`);
@@ -300,7 +260,6 @@ router.post("/deletePetsWithNoUserId", jwtCheck, async (req: any, res) => {
     console.log(`Error en /admin/deletePetsWithNoUserId. ${error.message}`);
   }
 });
-
 router.post("/deletePet", jwtCheck, async (req: any, res) => {
   console.log(`En ruta /admin/deletePet`);
   try {
@@ -348,7 +307,6 @@ router.post("/deletePet", jwtCheck, async (req: any, res) => {
     console.log(`Error en /admin/deletePets ${error.message}`);
   }
 });
-
 // AUX FN: CHECK IF LOGGED USER IS ADMIN
 async function checkIfJWTisAdmin(jwtId: string): Promise<boolean> {
   console.log(`Chequeando si el sub del JWT es un Admin`);
@@ -365,7 +323,6 @@ async function checkIfJWTisAdmin(jwtId: string): Promise<boolean> {
     throw new Error("Error al chequear si el JWT sub es un admin");
   }
 }
-
 // AUX FN: CHECK IF USER IS SUPER ADMIN
 async function checkIfJWTisSuperAdmin(jwtId: string): Promise<boolean> {
   console.log(`Chequeando si user id ${jwtId} es SUPER ADMIN`);
@@ -383,7 +340,6 @@ async function checkIfJWTisSuperAdmin(jwtId: string): Promise<boolean> {
     );
   }
 }
-
 // AUX FN: CHECK IF USER IS ADMIN OR SUPER ADMIN
 async function checkIfJWTisAdminOrSuperAdmin(jwtId: string): Promise<boolean> {
   console.log(`Chequeando si el user id "${jwtId}" es admin o super admin.`);
@@ -403,7 +359,6 @@ async function checkIfJWTisAdminOrSuperAdmin(jwtId: string): Promise<boolean> {
     );
   }
 }
-
 // SET isAdmin a TRUE o FALSE. Sólo la puede usar el SUPER ADMIN.
 router.put("/setIsAdmin", jwtCheck, async (req: any, res) => {
   console.log(`Entré a "admin/setIsAdmin"`);
@@ -465,7 +420,6 @@ router.put("/setIsAdmin", jwtCheck, async (req: any, res) => {
     return res.status(400).send({ error: `${error.message}` });
   }
 });
-
 // SET IS SUPER ADMIN. SÓLO LA PUEDE USAR UN SUPER ADMIN.
 router.put("/setIsSuperAdmin", jwtCheck, async (req: any, res) => {
   console.log(`Entré a "admin/setIsSuperAdmin"`);
@@ -529,13 +483,11 @@ router.put("/setIsSuperAdmin", jwtCheck, async (req: any, res) => {
     return res.status(400).send({ error: `${error.message}` });
   }
 });
-
 // CHEQUEAR SI USER LOGUEADO CON JWT ES ADMIN O NO
 router.post("/hasAdminPowers", jwtCheck, async (req: any, res) => {
   console.log(`Entré a "admin/hasAdminPowers".`);
   try {
     console.log(req.body);
-
     const jwtId: string = req.auth.sub;
     const passwordFromReq: string = req.body.password;
     if (passwordFromReq !== process.env.ADMIN_PASSWORD) {
@@ -560,7 +512,6 @@ router.post("/hasAdminPowers", jwtCheck, async (req: any, res) => {
     return res.status(400).send({ error: `${error.message}`, msg: false });
   }
 });
-
 // ----   RUTAS MULTIPLICADORAS:  -----------
 router.get("/createMultiplier", jwtCheck, async (req: any, res) => {
   try {
@@ -585,7 +536,6 @@ router.get("/createMultiplier", jwtCheck, async (req: any, res) => {
     return res.status(404).send(error.message);
   }
 });
-
 router.post("/changeMultiplier", jwtCheck, async (req: any, res) => {
   console.log(`Entré a /admin/changeMultiplier`);
   try {
@@ -633,13 +583,10 @@ router.post("/changeMultiplier", jwtCheck, async (req: any, res) => {
     return res.status(404).send(error.message);
   }
 });
-
 // ------ RUTAS DEPRECADAS O YA SIN SENTIDO : ------
-
 router.post("/mutateActiveToActivo", jwtCheck, async (req, res) => {
   console.log(`Entré a /admin/mutateActiveToActivo`);
   let password = req.body.password;
-
   try {
     if (password != process.env.ADMIN_PASSWORD) {
       return res.status(403).send(`La password de administrador no es válida`);
@@ -664,7 +611,6 @@ router.post("/mutateActiveToActivo", jwtCheck, async (req, res) => {
     return res.status(404).send(error.message);
   }
 });
-
 router.post("/banUser", jwtCheck, async (req: any, res) => {
   console.log(`En ruta /banUser`);
   try {
@@ -692,7 +638,6 @@ router.post("/banUser", jwtCheck, async (req: any, res) => {
     if (passwordFromReq !== process.env.ADMIN_PASSWORD) {
       return res.status(403).send(`La password de administrador no es válida`);
     }
-
     const user = await db.User.findByPk(id);
     if (user) {
       const ban = await db.Ban.create({ id: id, email: user.email });
@@ -722,7 +667,6 @@ router.post("/banUser", jwtCheck, async (req: any, res) => {
     return res.status(404).send(error.message);
   }
 });
-
 //BORRAR PETS QUE TIENEN UN UserId de un User que no existe en la DB
 router.delete("/purgePetsWithFalseUser", jwtCheck, async (req: any, res) => {
   console.log(`Entré a admin/purgePetsWithFalseUser`);

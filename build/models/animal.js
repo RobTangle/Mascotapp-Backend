@@ -23,6 +23,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true,
             defaultValue: "Sin nombre",
+            validate: {
+                len: [1, 50],
+            },
         },
         city: {
             type: DataTypes.STRING,

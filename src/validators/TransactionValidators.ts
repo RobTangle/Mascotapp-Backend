@@ -1,7 +1,13 @@
 import { ITransaction } from "../types/transactionTypes";
-import { isValidURL } from "./AnimalValidators";
-import { isValidString } from "./ReviewValidators";
-// import { checkStatus } from "./AnimalValidators";
+import {
+  isEmptyString,
+  isStringBetween1And101CharsLong,
+  isStringBetween1And50CharsLong,
+  isUndefinedOrNull,
+  isValidId,
+  isValidURL,
+} from "./GenericValidators";
+import { isValidString } from "./GenericValidators";
 
 export function validateNewTransaction(obj: any): ITransaction {
   console.log(`validateNewTransaction...`);
@@ -45,7 +51,7 @@ function checkPetImage(arg: any): string | undefined {
 }
 
 function checkUserName(arg: string): string | undefined {
-  if (isValidStringId(arg)) {
+  if (isStringBetween1And50CharsLong(arg)) {
     return arg;
   }
   if (isUndefinedOrNull(arg)) {
@@ -60,46 +66,17 @@ function checkUserName(arg: string): string | undefined {
 // function isValidName(arg: any): boolean {}
 
 function checkPetName(arg: any) {
-  if (isValidStringId(arg)) {
+  if (isStringBetween1And50CharsLong(arg)) {
     return arg;
   } else {
     throw new Error(
-      `Error de validación de petName es function ValidateNewTransaction. El name de la mascota es ${arg} y debe ser un string con length mayor a 0 y menor a 100.`
+      `Error de validación de petName es function ValidateNewTransaction. El name de la mascota es ${arg} y debe ser un string con length mayor a 0 y menor a 51.`
     );
   }
 }
 
-//! is UNDEFINEDorNULL:
-export function isUndefinedOrNull(argumento: any): boolean {
-  if (argumento === undefined || argumento === null) {
-    return true;
-  }
-  return false;
-}
-
-//! is EMPTY STRING:
-export function isEmptyString(argumento: any): boolean {
-  if (typeof argumento === "string" && argumento.length === 0) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function isValidStringId(argumento: any): boolean {
-  if (
-    typeof argumento === "string" &&
-    argumento.length > 0 &&
-    argumento.length < 100
-  ) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 function checkUserOfferingId(userOfferingFromReq: any) {
-  if (isValidStringId(userOfferingFromReq)) {
+  if (isValidId(userOfferingFromReq)) {
     return userOfferingFromReq;
   } else {
     throw new Error(
@@ -109,7 +86,7 @@ function checkUserOfferingId(userOfferingFromReq: any) {
 }
 
 function checkUserDemandingId(userDemandingFromReq: any) {
-  if (isValidStringId(userDemandingFromReq)) {
+  if (isValidId(userDemandingFromReq)) {
     return userDemandingFromReq;
   } else {
     throw new Error(
@@ -119,7 +96,7 @@ function checkUserDemandingId(userDemandingFromReq: any) {
 }
 
 function checkPetId(petIdFromReq: any) {
-  if (isValidStringId(petIdFromReq)) {
+  if (isValidId(petIdFromReq)) {
     return petIdFromReq;
   } else {
     throw new Error(`El pet id "${petIdFromReq}" no es válido.`);
@@ -128,7 +105,7 @@ function checkPetId(petIdFromReq: any) {
 
 //! Tengo que mejorar esta validación! La dejo provisoria!!!!
 function checkStatus(statusFromReq: any) {
-  if (isValidStringId(statusFromReq)) {
+  if (isValidId(statusFromReq)) {
     return statusFromReq;
   } else {
     throw new Error(`El status ingresado "${statusFromReq}" no es válido`);
@@ -142,7 +119,7 @@ function checkUserOfferingCheck(userOfferingCheckFromReq: any) {
   if (isEmptyString(userOfferingCheckFromReq)) {
     return undefined;
   }
-  if (isValidStringId(userOfferingCheckFromReq)) {
+  if (isValidId(userOfferingCheckFromReq)) {
     return userOfferingCheckFromReq;
   }
   console.log(`Error en el checkUserOfferingCheck`);
@@ -158,7 +135,7 @@ function checkUserDemandingCheck(userDemandingFromReq: any) {
   if (isEmptyString(userDemandingFromReq)) {
     return undefined;
   }
-  if (isValidStringId(userDemandingFromReq)) {
+  if (isValidId(userDemandingFromReq)) {
     return userDemandingFromReq;
   }
   console.log(`Error en el checkUserDemandingCheck`);

@@ -1,4 +1,3 @@
-import { checkServerIdentity } from "tls";
 import {
   Ages,
   Genders,
@@ -9,7 +8,15 @@ import {
   VaccinationStatus,
   updatedPet,
 } from "../types/petTypes";
-import { isEmptyString } from "./ReviewValidators";
+import {
+  isString,
+  isStringBetween1And101CharsLong,
+  isUndefinedOrNull,
+  isValidId,
+  isValidURL,
+  isEmptyString,
+  isStringBetween1And50CharsLong,
+} from "./GenericValidators";
 
 //! VALIDAR TODO EL PET ENTERO:
 // SI HAY UN ERROR, DEVOLVER UN ERROR.
@@ -162,6 +169,7 @@ function isVaccSchemeStatus(argumento: any): boolean {
   return Object.values(VaccinationStatus).includes(argumento);
 }
 
+// CHECK VACCINATION SCHEME STATUS:
 export function checkVaccinationSchemeStatus(
   vaccSchStatusFromReq: any
 ): VaccinationStatus | undefined {
@@ -176,17 +184,7 @@ export function checkVaccinationSchemeStatus(
   );
 }
 
-//------funciones de chequeo de image:
-export function isValidURL(argumento: any): boolean {
-  if (typeof argumento !== "string") {
-    return false;
-  }
-  return (
-    argumento.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) !==
-    null
-  );
-}
-
+// CHECK IMAGE URL:
 export function checkImageURL(imageFromReq: any): string | undefined {
   if (isUndefinedOrNull(imageFromReq) || isEmptyString(imageFromReq)) {
     return undefined;
@@ -197,8 +195,7 @@ export function checkImageURL(imageFromReq: any): string | undefined {
   throw new Error(`la URL de imagen ingresada "${imageFromReq}" no es válida`);
 }
 
-//-----funciones de chequeo de comments:
-
+// CHECK COMMENTS:
 export function checkComments(commentsFromReq: any): string | undefined {
   if (isUndefinedOrNull(commentsFromReq)) {
     return undefined;
@@ -218,30 +215,18 @@ export function checkComments(commentsFromReq: any): string | undefined {
   );
 }
 
-//-----funciones de chequeo de name:
-
+// CHECK NAME:
 export function checkName(nameFromReq: any): string | undefined {
   if (isUndefinedOrNull(nameFromReq) || isEmptyString(nameFromReq)) {
     return undefined;
   }
-  if (isStringBetween1And101CharsLong(nameFromReq)) {
+  if (isStringBetween1And50CharsLong(nameFromReq)) {
     return nameFromReq;
   }
   throw new Error(`El nombre/name ingresado "${nameFromReq}" no es válido`);
 }
 
-//-----funciones de chequeo de id:
-export function isValidId(argumento: any): boolean {
-  if (
-    typeof argumento === "string" &&
-    argumento.length >= 1 &&
-    argumento.length <= 50
-  ) {
-    return true;
-  }
-  return false;
-}
-
+// CHECK ID:
 export function checkId(idFromReq: any): string | undefined {
   if (isUndefinedOrNull(idFromReq)) {
     return undefined;
@@ -250,32 +235,4 @@ export function checkId(idFromReq: any): string | undefined {
     return idFromReq;
   }
   throw new Error(`El id ingresado "${idFromReq}" no es válido.`);
-}
-
-//! is STRING:
-export function isString(argumento: any): boolean {
-  if (typeof argumento !== "string") {
-    return false;
-  }
-  return true;
-}
-
-//! funcion auxiliar para chequear strings y su largo
-export function isStringBetween1And101CharsLong(argumento: any): boolean {
-  if (
-    typeof argumento === "string" &&
-    argumento.length >= 1 &&
-    argumento.length <= 100
-  ) {
-    return true;
-  }
-  return false;
-}
-
-//! is UNDEFINEDorNULL:
-export function isUndefinedOrNull(argumento: any): boolean {
-  if (argumento === undefined || argumento === null) {
-    return true;
-  }
-  return false;
 }

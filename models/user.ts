@@ -3,17 +3,6 @@
 import { Model, UUIDV4 } from "sequelize";
 import { IUserAttributes } from "../src/types/userTypes";
 
-// export interface UserAttributes {
-//   id: string | undefined;
-//   googleId: string | undefined;
-//   displayName: string | undefined;
-//   email: string | undefined;
-//   name: string | undefined;
-//   postalCode: string | undefined;
-//   aditionalContactInfo: string | undefined;
-//   thumbnail: string | undefined;
-// }
-
 module.exports = (sequelize: any, DataTypes: any) => {
   class User extends Model<IUserAttributes> implements IUserAttributes {
     /**
@@ -23,7 +12,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
      */
     id!: string; // sub
     email!: string;
-    name: string | undefined;
+    name!: string;
     city: string | undefined;
     contact: string | undefined;
     image: string | undefined;
@@ -55,7 +44,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
         validate: {
           len: [1, 50],
         },

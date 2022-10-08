@@ -1,8 +1,8 @@
 import { Router } from "express";
-import db from "../../models/index";
-import { validateNewComment } from "../auxiliary/CommentValidators";
-import { IComment, ICommentResponse } from "../types/commentTypes";
-import { IImage } from "../types/imageTypes";
+import db from "../../../models/index";
+import { validateNewComment } from "../../validators/CommentValidators";
+import { IComment, ICommentResponse } from "../../types/commentTypes";
+import { IImage } from "../../types/imageTypes";
 
 const router = Router();
 

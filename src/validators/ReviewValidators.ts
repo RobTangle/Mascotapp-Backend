@@ -1,4 +1,9 @@
 import { IReview } from "../types/reviewTypes";
+import {
+  isEmptyString,
+  isUndefinedOrNull,
+  isValidString,
+} from "./GenericValidators";
 
 export function validateNewReview(reqBody: any): IReview {
   try {
@@ -12,31 +17,6 @@ export function validateNewReview(reqBody: any): IReview {
   } catch (error: any) {
     console.log(`Error en la function validateNewReview. ${error.message}`);
     throw new Error(`Error en la function validateNewReview. ${error.message}`);
-  }
-}
-
-export function isValidString(argumento: any): boolean {
-  if (typeof argumento === "string" && argumento.length > 0) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-//! is UNDEFINEDorNULL:
-export function isUndefinedOrNull(argumento: any): boolean {
-  if (argumento === undefined || argumento === null) {
-    return true;
-  }
-  return false;
-}
-
-//! is EMPTY STRING:
-export function isEmptyString(argumento: any): boolean {
-  if (typeof argumento === "string" && argumento.length === 0) {
-    return true;
-  } else {
-    return false;
   }
 }
 
@@ -72,7 +52,7 @@ function checkComments(commentsFromReq: any) {
   );
 }
 
-function checkReviewedId(reviewedIdFromReq: any) {
+export function checkReviewedId(reviewedIdFromReq: any) {
   if (!isValidString(reviewedIdFromReq)) {
     throw new Error(
       `El reviewed Id "${reviewedIdFromReq}" ingresado no es válido.`

@@ -1,10 +1,12 @@
 import { INewUser } from "../types/userTypes";
 import {
-  isString,
-  isStringBetween1And101CharsLong,
+  isEmail,
+  isEmptyString,
   isUndefinedOrNull,
-} from "./AnimalValidators";
-import { isEmptyString } from "./ReviewValidators";
+  isStringBetween1And101CharsLong,
+  isString,
+  isStringBetween1And50CharsLong,
+} from "./GenericValidators";
 
 export function validateNewUser(newUserFromReq: INewUser): INewUser {
   try {
@@ -33,7 +35,7 @@ export function checkUserId(idFromReq: any): string {
 
 //CHECK USER NAME
 export function checkUserName(nameFromReq: any): string {
-  if (isStringBetween1And101CharsLong(nameFromReq)) {
+  if (isStringBetween1And50CharsLong(nameFromReq)) {
     return nameFromReq;
   }
   throw new Error(`El nombre ingresado "${nameFromReq}" no es válido.`);
@@ -48,14 +50,6 @@ export function checkCity(contactFromReq: any): string | undefined {
     return contactFromReq;
   }
   throw new Error(`La ciudad ingresada "${contactFromReq}" no es válida.`);
-}
-
-//IS EMAIL:
-export function isEmail(argumento: any): boolean {
-  let regex = new RegExp(
-    "([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|[[\t -Z^-~]*])"
-  );
-  return regex.test(argumento);
 }
 
 //CHECK VALID EMAIL
@@ -97,7 +91,7 @@ export function checkAditionalContactInfo(
   );
 }
 
-//CHECK Thumbnail:
+//CHECK THUMBNAIL / IMAGE:
 export function checkThumbnail(thumbnailFromReq: any): string | undefined {
   if (isUndefinedOrNull(thumbnailFromReq)) {
     return undefined;

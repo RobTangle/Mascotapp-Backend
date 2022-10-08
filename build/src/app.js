@@ -13,14 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const users_1 = __importDefault(require("./routes/users"));
-const pets_1 = __importDefault(require("./routes/pets"));
-const checkout_1 = __importDefault(require("./routes/checkout"));
-const visitor_1 = __importDefault(require("./routes/visitor"));
-const transaction_1 = __importDefault(require("./routes/transaction"));
-const review_1 = __importDefault(require("./routes/review"));
-const comment_1 = __importDefault(require("./routes/comment"));
-const admin_1 = __importDefault(require("./routes/admin"));
+const user_Routes_1 = __importDefault(require("./routes/user/user-Routes"));
+const pet_Routes_1 = __importDefault(require("./routes/pet/pet-Routes"));
+const checkout_Routes_1 = __importDefault(require("./routes/checkout/checkout-Routes"));
+const visitor_Routes_1 = __importDefault(require("./routes/visitor/visitor-Routes"));
+const transaction_Routes_1 = __importDefault(require("./routes/transaction/transaction-Routes"));
+const review_Routes_1 = __importDefault(require("./routes/review/review-Routes"));
+const comment_Routes_1 = __importDefault(require("./routes/comment/comment-Routes"));
+const admin_Routes_1 = __importDefault(require("./routes/admin/admin-Routes"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
@@ -56,14 +56,14 @@ var corsOptions = {
 };
 app.use((0, cors_1.default)(corsOptions));
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use("/users", users_1.default);
-app.use("/pets", pets_1.default);
-app.use("/checkout", checkout_1.default);
-app.use("/visitor", visitor_1.default);
-app.use("/reviews", review_1.default);
-app.use("/transactions", transaction_1.default);
-app.use("/comments", comment_1.default);
-app.use("/admin", admin_1.default);
+app.use("/users", user_Routes_1.default);
+app.use("/pets", pet_Routes_1.default);
+app.use("/checkout", checkout_Routes_1.default);
+app.use("/visitor", visitor_Routes_1.default);
+app.use("/reviews", review_Routes_1.default);
+app.use("/transactions", transaction_Routes_1.default);
+app.use("/comments", comment_Routes_1.default);
+app.use("/admin", admin_Routes_1.default);
 //! rutas de prueba:
 app.get("/testauth", jwtCheck, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
