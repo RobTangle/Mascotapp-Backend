@@ -12,7 +12,13 @@
     "build": "tsc",
     "start": "node build/index.js"
   },
-  "keywords": [],
+  "keywords": [
+    "Mascotapp",
+    "mascotapp",
+    "pets",
+    "mascotas",
+    "Soy Henry"
+  ],
   "author": "Roberto Spinelli, Laureano Marenco, Renzo Etari, Alejandro Juka",
   "license": "ISC",
   "devDependencies": {
