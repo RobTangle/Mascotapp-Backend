@@ -62,7 +62,7 @@ router.post("/deleteUser", jwtMiddleware_1.default, (req, res) => __awaiter(void
         else {
             yield userToBeDeleted.destroy();
             console.log(`Usuario destruido suavemente.`);
-            yield models_1.default.Action.create(Object.assign(Object.assign({}, newAdminAction), { action_status: 200 }));
+            yield models_1.default.Action.create(Object.assign(Object.assign({}, newAdminAction), { action_status: 200, action_msg: `Usuario con email "${emailFromReq}" y id "${idFromReq}" eliminado.` }));
             return res
                 .status(200)
                 .send(`Usuario con email "${emailFromReq}" y id "${idFromReq}" eliminado.`);
@@ -122,7 +122,7 @@ router.post("/cleanPostsOfUserId", jwtMiddleware_1.default, (req, res) => __awai
             console.log("post destruido");
             numberOfPostsDestroyed++;
         }
-        yield models_1.default.Action.create(Object.assign(Object.assign({}, newAdminAction), { status: 200, action_msg: `Número de posts destruidos: ${numberOfPostsDestroyed}` }));
+        yield models_1.default.Action.create(Object.assign(Object.assign({}, newAdminAction), { action_status: 200, action_msg: `Número de posts destruidos: ${numberOfPostsDestroyed}` }));
         return res
             .status(200)
             .send(`Número de posts destruidos: ${numberOfPostsDestroyed}`);

@@ -61,7 +61,11 @@ router.post("/deleteUser", jwtCheck, async (req: any, res) => {
     } else {
       await userToBeDeleted.destroy();
       console.log(`Usuario destruido suavemente.`);
-      await db.Action.create({ ...newAdminAction, action_status: 200 });
+      await db.Action.create({
+        ...newAdminAction,
+        action_status: 200,
+        action_msg: `Usuario con email "${emailFromReq}" y id "${idFromReq}" eliminado.`,
+      });
       return res
         .status(200)
         .send(
@@ -132,7 +136,7 @@ router.post("/cleanPostsOfUserId", jwtCheck, async (req: any, res) => {
     }
     await db.Action.create({
       ...newAdminAction,
-      status: 200,
+      action_status: 200,
       action_msg: `Número de posts destruidos: ${numberOfPostsDestroyed}`,
     });
     return res
