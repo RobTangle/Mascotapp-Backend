@@ -51,7 +51,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     },
     {
       sequelize,
-      modelName: "Ban",
+      modelName: "Action",
     }
   );
   return Action;

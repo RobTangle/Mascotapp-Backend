@@ -21,7 +21,7 @@ module.exports = {
     cookieKey: process.env.SESSION_COOKIE_KEY,
 
     gmailUser: process.env.GMAIL_USER,
-    gmailPass: process.env.GMAIL_PASS
+    gmailPass: process.env.GMAIL_PASS,
   },
   test: {
     username: "root",
@@ -37,6 +37,6 @@ module.exports = {
     clientSecret: "GOOGLE_CLIENT_SECRET",
     cookieKey: "SESSION_COOKIE_KEY",
     gmailUser: "GMAIL_USER",
-    gmailPass: "GMAIL_PASS"
+    gmailPass: "GMAIL_PASS",
   },
 };
