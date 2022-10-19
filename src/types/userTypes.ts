@@ -66,3 +66,7 @@ export interface IContactInfoOfOwner {
   linkToDonate: string | undefined;
   reviews: any;
 }
+
+export interface IReqAuth {
+  sub: string;
+}
