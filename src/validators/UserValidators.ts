@@ -13,7 +13,7 @@ export function validateNewUser(newUserFromReq: INewUser): INewUser {
     let userFromReqChecked: INewUser = {
       id: checkUserId(newUserFromReq.id),
       email: checkValidEmail(newUserFromReq.email),
-      name: checkUserName(newUserFromReq),
+      name: checkUserName(newUserFromReq.name),
       city: checkCity(newUserFromReq.city),
       contact: checkAditionalContactInfo(newUserFromReq.contact),
       image: checkThumbnail(newUserFromReq.image),
