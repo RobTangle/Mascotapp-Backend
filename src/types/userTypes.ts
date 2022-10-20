@@ -69,4 +69,10 @@ export interface IContactInfoOfOwner {
 
 export interface IReqAuth {
   sub: string;
+  iss: string;
+  aud: string[];
+  iat: number;
+  exp: number;
+  azp: string;
+  scope: string;
 }
