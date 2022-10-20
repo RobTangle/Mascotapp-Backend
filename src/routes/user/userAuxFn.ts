@@ -112,7 +112,7 @@ export function parsePetsPostedByUser(petsPostedByUser: Pet[]): IPetOfUser[] {
 }
 
 //GET POSTS OF USER:
-export async function getPostsOfUser(id: any) {
+export async function getPostsOfUser(id: any): Promise<IPetOfUser[] | []> {
   console.log(`Buscando los posteos de user con id: ${id}`);
   try {
     let postsOfUser = await db.Animal.findAll({
@@ -142,7 +142,7 @@ export async function getParsedReviewsToOwner(id: string) {
   }
 }
 
-export function parseReviewerName(reviewerName: any) {
+export function parseReviewerName(reviewerName: any): string {
   console.log(`Parseando reviewer name`);
   try {
     if (!reviewerName) {
@@ -156,7 +156,7 @@ export function parseReviewerName(reviewerName: any) {
   }
 }
 
-export function parseReviewerImage(reviewerImage: any) {
+export function parseReviewerImage(reviewerImage: any): string {
   try {
     if (!reviewerImage) {
       return "https://www.utas.edu.au/__data/assets/image/0013/210811/varieties/profile_image.png";
@@ -175,11 +175,8 @@ export async function parseReviewsToOwner(arrayOfReviews: any) {
   try {
     let parsedReviews = await Promise.all(
       arrayOfReviews.map(async (review: any) => {
-        // console.log("review:");
-        // console.log(review);
         let reviewer = await db.User.findByPk(review.reviewer_id);
-        // console.log(reviewer.name);
-        // console.log(reviewer.image);
+
         return {
           id: review.dataValues.id,
           transaction_id: review.dataValues.transaction_id,
