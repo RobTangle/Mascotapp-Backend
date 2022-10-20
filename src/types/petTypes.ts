@@ -76,7 +76,7 @@ export interface IPetOfUser {
   id: string | undefined;
   name: string | undefined;
   city: string | undefined;
-  specie: string;
+  specie: Species;
   race: string | undefined;
   age: Ages | undefined;
   gender: Genders | undefined;
