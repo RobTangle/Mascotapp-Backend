@@ -48,12 +48,8 @@ router.post("/deleteUser", jwtCheck, async (req: any, res) => {
       });
     }
     if (passwordFromReq != process.env.ADMIN_PASSWORD) {
-      console.log(
-        `La password de administrador "${passwordFromReq}" no es válida`
-      );
-      return res
-        .status(403)
-        .send(`La password de administrador "${passwordFromReq}" no es válida`);
+      console.log(`La password de administrador no es válida`);
+      return res.status(403).send(`La password de administrador no es válida`);
     }
     let userToBeDeleted = await db.User.findOne({
       where: {
@@ -108,9 +104,9 @@ router.post("/cleanPostsOfUserId", jwtCheck, async (req: any, res) => {
     }
 
     const newAdminAction: IAdminAction = {
-      admin_id: reqUserId,
+      admin_id: reqUserIdSanitized,
       route: `/admin/cleanPostsOfUserId`,
-      action: `Delete posts of User with id "${req.body.userId}". IP: ${req.ip}`,
+      action: `Delete posts of User with id "${userIdSanitized}". IP: ${req.ip}`,
       action_status: 0,
     };
 
@@ -124,9 +120,7 @@ router.post("/cleanPostsOfUserId", jwtCheck, async (req: any, res) => {
       });
     }
     if (passwordFromReq !== process.env.ADMIN_PASSWORD) {
-      console.log(
-        `La password de administrador ${passwordFromReq} no es válida`
-      );
+      console.log(`La password de administrador no es válida`);
       return res
         .status(403)
         .send(
@@ -363,7 +357,7 @@ router.put("/setIsAdmin", jwtCheck, async (req: any, res) => {
     };
 
     if (passwordFromReq !== process.env.ADMIN_PASSWORD) {
-      console.log(`La password ingresada "${passwordFromReq}" no es válida.`);
+      console.log(`La password ingresada no es válida.`);
 
       return res
         .status(403)
@@ -436,7 +430,7 @@ router.put("/setIsSuperAdmin", jwtCheck, async (req: any, res) => {
     };
 
     if (passwordFromReq !== process.env.ADMIN_PASSWORD) {
-      console.log(`La password ingresada "${passwordFromReq}" no es válida.`);
+      console.log(`La password ingresada no es válida.`);
 
       return res
         .status(403)
@@ -492,7 +486,7 @@ router.post("/hasAdminPowers", jwtCheck, async (req: any, res) => {
     if (passwordFromReq !== process.env.ADMIN_PASSWORD) {
       console.log(`La password ${passwordFromReq} no es válida.`);
       return res.status(403).send({
-        error: `La password de administrador "${passwordFromReq}" ingresada no es válida`,
+        error: `La password de administrador ingresada no es válida`,
         msg: false,
       });
     }
@@ -694,7 +688,7 @@ router.delete("/purgePetsWithFalseUser", jwtCheck, async (req: any, res) => {
       });
     }
     if (!password) {
-      throw new Error(`La password enviada por body es "${password}"`);
+      throw new Error(`La password enviada por body es falsy`);
     }
     if (password !== process.env.ADMIN_PASSWORD) {
       console.log(`La password "${password}" es inválida`);
