@@ -15,8 +15,8 @@ router.get("/allReviews", async (req, res) => {
     let allReviews = await getAllReviews();
     return res.status(200).send(allReviews);
   } catch (error: any) {
-    console.log(`Error en /reviews/allReviews`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -86,8 +86,8 @@ router.post("/newReview", jwtCheck, async (req: any, res) => {
       .status(404)
       .send({ msg: "Transacción no válida para estos usuarios." });
   } catch (error: any) {
-    console.log(`Error en ruta /newReview.  ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -110,8 +110,8 @@ router.post("/getReviewsToUser", async (req, res) => {
     console.log(`Devolviendo reviews hechas al user con id ${req.body.id}...`);
     return res.status(200).send(reviewsToUser);
   } catch (error: any) {
-    console.log(`Error en /reviews/getReviewsOfUser. ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 

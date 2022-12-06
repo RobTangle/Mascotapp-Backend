@@ -125,9 +125,9 @@ router.post("/", async (req, res) => {
       console.log("donation: " + donation);
       return res.send({ msg: "Succesfull payment" });
     }
-  } catch (err: any) {
-    console.log("error en /checkout");
-    return res.json({ msg: err.raw.message });
+  } catch (error: any) {
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -138,8 +138,8 @@ router.get("/balance", async (req, res) => {
     console.log("All the donations: " + allTheDonations);
     return res.status(200).send(allTheDonations);
   } catch (error: any) {
-    console.log("error en /balance");
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 

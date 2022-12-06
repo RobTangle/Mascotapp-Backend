@@ -47,8 +47,8 @@ router.post("/newComment", async (req, res) => {
     );
     return res.status(200).send(newComment);
   } catch (error: any) {
-    console.log(`Error en newComment: ${error.message}`);
-    return res.status(404).send(`${error.message}`);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -70,8 +70,8 @@ router.get("/getComments", async (req, res) => {
 
     return res.status(200).send(allTheComments);
   } catch (error: any) {
-    console.log(`Error en comments/getComments`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 

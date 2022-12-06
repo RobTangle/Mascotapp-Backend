@@ -18,8 +18,8 @@ route.get("/addVisitor", async (req: any, res) => {
     // console.log(`Visita registrada en la DB`);
     return res.sendStatus(201);
   } catch (error: any) {
-    console.log(`Error en /visitor/`);
-    return error.message;
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -30,9 +30,8 @@ route.get("/numbervisitors", async (req: any, res: any) => {
     let numberOfVisitors = arrayVisitors.length;
     res.status(200).send(`${numberOfVisitors}`);
   } catch (error: any) {
-    console.log(`Error en visitors/numberVisitors. ${error.message}`);
-
-    res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -114,8 +113,8 @@ route.post("/mailAdmin", async (req, res) => {
       else console.log("Email enviado: " + info.response);
     });
   } catch (error: any) {
-    console.log(`Error en /mailAdmin. ${error.message}`);
-    return res.status(404).send(error);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 export default route;
