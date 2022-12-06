@@ -3,6 +3,7 @@ const env = process.env.NODE_ENV || "development";
 const { GMAIL_PASS, GMAIL_USER, STRIPE_KEY } = process.env;
 import { Router } from "express";
 import db from "../../../models";
+import { sanitize } from "../../validators/GenericValidators";
 import { getAllDonations } from "./checkoutAuxFn";
 const Stripe = require("stripe");
 const router = Router();
@@ -52,6 +53,10 @@ router.post("/", async (req, res) => {
       },
     });
 
+    let emailSanitized = sanitize(email);
+    let amountSanitized = sanitize(amount);
+    let idSanitized = sanitize(id);
+
     const mailOptions = {
       from: "service.mascotapp@gmail.com",
       to: email,
@@ -88,8 +93,8 @@ router.post("/", async (req, res) => {
                       <p>Te damos profundas gracias desde Mascotapp por colaborar. Nuestro proyecto necesita de las financiación de los usuarios por lo cual tu aporte es muy importante.</p>
       
                       <div>Monto donado: ${
-                        amount / 100
-                      } USD</div><div>ID de la transferencia: ${id}</div>
+                        amountSanitized / 100
+                      } USD</div><div>ID de la transferencia: ${idSanitized}</div>
                       <!-- Gracias -->
                       <p style="margin-bottom: 50px;"><i>Atentamente:</i><br>El equipo de Mascotapp</p>
                   </div>

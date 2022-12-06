@@ -86,3 +86,16 @@ export function isValidId(argumento: any): boolean {
   }
   return false;
 }
+
+export function sanitize(string: any) {
+  const map: any = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#x27;",
+    "/": "&#x2F;",
+  };
+  const reg = /[&<>"'/]/gi;
+  return string.replace(reg, (match: string | number) => map[match]);
+}
