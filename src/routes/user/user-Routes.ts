@@ -409,7 +409,7 @@ router.post("/buyProducts", jwtCheck, async (req: any, res) => {
                       <p>Hola ${nameParsed} estamos preparando tu compra para enviarla a ${direccionParsed}. Te daremos aviso cuando el producto esté en camino.</p>
       
                       <div>Productos: ${items.map((i: any) => {
-                        return i.title;
+                        return sanitize(i.title);
                       })}</div>
                         <div>Puntos: ${totalPointsParsed}</div>
                       <!-- Gracias -->
