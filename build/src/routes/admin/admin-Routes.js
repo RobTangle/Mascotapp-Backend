@@ -21,6 +21,7 @@ const transactionTypes_1 = require("../../types/transactionTypes");
 const petAuxFn_1 = require("../pet/petAuxFn");
 const userAuxFn_1 = require("../user/userAuxFn");
 const adminAuxFn_1 = require("./adminAuxFn");
+const GenericValidators_1 = require("../../validators/GenericValidators");
 dotenv_1.default.config();
 const router = (0, express_1.Router)();
 //---------------------- RUTAS: -----------------------------
@@ -62,10 +63,10 @@ router.post("/deleteUser", jwtMiddleware_1.default, (req, res) => __awaiter(void
         else {
             yield userToBeDeleted.destroy();
             console.log(`Usuario destruido suavemente.`);
-            yield models_1.default.Action.create(Object.assign(Object.assign({}, newAdminAction), { action_status: 200, action_msg: `Usuario con email "${emailFromReq}" y id "${idFromReq}" eliminado.` }));
+            yield models_1.default.Action.create(Object.assign(Object.assign({}, newAdminAction), { action_status: 200, action_msg: `Usuario con email "${userToBeDeleted.email}" y id "${userToBeDeleted.id}" eliminado.` }));
             return res
                 .status(200)
-                .send(`Usuario con email "${emailFromReq}" y id "${idFromReq}" eliminado.`);
+                .send(`Usuario con email "${userToBeDeleted.email}" y id "${userToBeDeleted.id}" eliminado.`);
         }
     }
     catch (error) {
@@ -90,14 +91,14 @@ router.post("/cleanPostsOfUserId", jwtMiddleware_1.default, (req, res) => __awai
         if (!reqUserIsAdmin) {
             console.log(`El usuario con id "${reqUserId}" que realiza la request no es un admin.`);
             return res.status(403).send({
-                error: `El usuario con id "${reqUserId}" que realiza la request no es un admin.`,
+                error: `El usuario con id "${reqUserId.toString()}" que realiza la request no es un admin.`,
             });
         }
         if (passwordFromReq !== process.env.ADMIN_PASSWORD) {
             console.log(`La password de administrador ${passwordFromReq} no es válida`);
             return res
                 .status(403)
-                .send(`La password de administrador "${passwordFromReq}" no es válida`);
+                .send(`La password de administrador "${passwordFromReq.toString()}" no es válida`);
         }
         if (!req.body.userId) {
             throw new Error(`Debe ingresar un userId. Usted envió "${req.body.userId}"`);
@@ -269,10 +270,15 @@ router.put("/setIsAdmin", jwtMiddleware_1.default, (req, res) => __awaiter(void 
         const passwordFromReq = req.body.password;
         const idOfUserToSetIsAdminProp = req.body.userToAffect_id;
         const newIsAdminValue = req.body.newIsAdminValue;
+        let idOfUserToSetIsAdminPropSanitized = (0, GenericValidators_1.sanitizeID)(req.body.userToAffect_id);
+        if (idOfUserToSetIsAdminProp !== idOfUserToSetIsAdminPropSanitized) {
+            console.log("idOfUserToSetIsAdminProp tiene caracteres inválidos");
+            throw new Error("idOfUserToSetIsAdminProp tiene caracteres inválidos");
+        }
         const newAdminAction = {
             admin_id: reqAdminId,
             route: `/admin/setIsAdmin`,
-            action: `Setear/cambiar la prop "isAdmin" del user con id "${idOfUserToSetIsAdminProp}" a "${newIsAdminValue}".`,
+            action: `Setear/cambiar la prop "isAdmin" del user con id "${idOfUserToSetIsAdminPropSanitized}" a "${newIsAdminValue}".`,
             action_status: 0,
             action_msg: "",
         };
@@ -288,19 +294,19 @@ router.put("/setIsAdmin", jwtMiddleware_1.default, (req, res) => __awaiter(void 
                 error: `Se debe tener rol de Super Admin para realizar esta acción.`,
             });
         }
-        const userToSetIsAdmin = yield models_1.default.User.findByPk(idOfUserToSetIsAdminProp);
+        const userToSetIsAdmin = yield models_1.default.User.findByPk(idOfUserToSetIsAdminPropSanitized);
         if (!userToSetIsAdmin) {
-            throw new Error(`No se encontró en la Data Base al usuario con el id ${idOfUserToSetIsAdminProp}`);
+            throw new Error(`No se encontró en la Data Base al usuario con el id ${idOfUserToSetIsAdminPropSanitized}`);
         }
         if (newIsAdminValue !== true && newIsAdminValue !== false) {
             throw new Error(`El valor de newIsAdminValue debe ser true o false (booleanos). Usted ingresó ${newIsAdminValue}, el cual no es correcto.`);
         }
         userToSetIsAdmin.isAdmin = newIsAdminValue;
         yield userToSetIsAdmin.save();
-        console.log(`Usuario con id ${idOfUserToSetIsAdminProp} fue seteado a isAdmin = ${newIsAdminValue}.`);
-        yield models_1.default.Action.create(Object.assign(Object.assign({}, newAdminAction), { action_status: 200, action_msg: `Usuario con id ${idOfUserToSetIsAdminProp} fue seteado a isAdmin = ${newIsAdminValue}.` }));
+        console.log(`Usuario con id ${idOfUserToSetIsAdminPropSanitized} fue seteado a isAdmin = ${newIsAdminValue}.`);
+        yield models_1.default.Action.create(Object.assign(Object.assign({}, newAdminAction), { action_status: 200, action_msg: `Usuario con id ${idOfUserToSetIsAdminPropSanitized} fue seteado a isAdmin = ${newIsAdminValue}.` }));
         return res.status(200).send({
-            msg: `Usuario con id ${idOfUserToSetIsAdminProp} fue seteado a isAdmin = ${newIsAdminValue}.`,
+            msg: `Usuario con id ${idOfUserToSetIsAdminPropSanitized} fue seteado a isAdmin = ${newIsAdminValue}.`,
         });
     }
     catch (error) {
@@ -316,10 +322,15 @@ router.put("/setIsSuperAdmin", jwtMiddleware_1.default, (req, res) => __awaiter(
         const passwordFromReq = req.body.password;
         const idOfUserToSetIsSuperAdminProp = req.body.userToAffect_id;
         const newIsSuperAdminValue = req.body.newIsSuperAdminValue;
+        let idOfUserToSetIsSuperAdminPropSanitized = (0, GenericValidators_1.sanitizeID)(req.body.userToAffect_id);
+        if (idOfUserToSetIsSuperAdminProp !== idOfUserToSetIsSuperAdminPropSanitized) {
+            console.log("idOfUserToSetIsAdminProp tiene caracteres inválidos");
+            throw new Error("idOfUserToSetIsAdminProp tiene caracteres inválidos");
+        }
         const newAdminAction = {
             admin_id: reqAdminId,
             route: `/admin/setIsSuperAdmin`,
-            action: `Setear/cambiar la prop "isSuperAdmin" del user con id "${idOfUserToSetIsSuperAdminProp}" a "${newIsSuperAdminValue}".`,
+            action: `Setear/cambiar la prop "isSuperAdmin" del user con id "${idOfUserToSetIsSuperAdminPropSanitized}" a "${newIsSuperAdminValue}".`,
             action_status: 0,
             action_msg: "",
         };
@@ -335,19 +346,19 @@ router.put("/setIsSuperAdmin", jwtMiddleware_1.default, (req, res) => __awaiter(
                 error: `Se debe tener rol de Super Admin para realizar esta acción.`,
             });
         }
-        const userToSetIsSuperAdmin = yield models_1.default.User.findByPk(idOfUserToSetIsSuperAdminProp);
+        const userToSetIsSuperAdmin = yield models_1.default.User.findByPk(idOfUserToSetIsSuperAdminPropSanitized);
         if (!userToSetIsSuperAdmin) {
-            throw new Error(`No se encontró en la Data Base al usuario con el id ${idOfUserToSetIsSuperAdminProp}`);
+            throw new Error(`No se encontró en la Data Base al usuario con el id ${idOfUserToSetIsSuperAdminPropSanitized}`);
         }
         if (newIsSuperAdminValue !== true && newIsSuperAdminValue !== false) {
             throw new Error(`El valor de newIsSuperAdmin debe ser true o false (booleanos). Usted ingresó ${newIsSuperAdminValue}, el cual no es correcto.`);
         }
         userToSetIsSuperAdmin.isSuperAdmin = newIsSuperAdminValue;
         yield userToSetIsSuperAdmin.save();
-        console.log(`Usuario con id ${idOfUserToSetIsSuperAdminProp} fue seteado a isAdmin = ${newIsSuperAdminValue}.`);
-        yield models_1.default.Action.create(Object.assign(Object.assign({}, newAdminAction), { action_status: 200, action_msg: `Usuario con id ${idOfUserToSetIsSuperAdminProp} fue seteado a isAdmin = ${newIsSuperAdminValue}.` }));
+        console.log(`Usuario con id ${idOfUserToSetIsSuperAdminPropSanitized} fue seteado a isAdmin = ${newIsSuperAdminValue}.`);
+        yield models_1.default.Action.create(Object.assign(Object.assign({}, newAdminAction), { action_status: 200, action_msg: `Usuario con id ${idOfUserToSetIsSuperAdminPropSanitized} fue seteado a isAdmin = ${newIsSuperAdminValue}.` }));
         return res.status(200).send({
-            msg: `Usuario con id ${idOfUserToSetIsSuperAdminProp} fue seteado a isAdmin = ${newIsSuperAdminValue}.`,
+            msg: `Usuario con id ${idOfUserToSetIsSuperAdminPropSanitized} fue seteado a isAdmin = ${newIsSuperAdminValue}.`,
         });
     }
     catch (error) {

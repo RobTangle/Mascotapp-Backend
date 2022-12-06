@@ -15,6 +15,7 @@ import {
   getAllReviewsToUser,
   getPostsOfUser,
 } from "./adminAuxFn";
+import { sanitizeID } from "../../validators/GenericValidators";
 
 dotenv.config();
 
@@ -70,12 +71,13 @@ router.post("/deleteUser", jwtCheck, async (req: any, res) => {
       await db.Action.create({
         ...newAdminAction,
         action_status: 200,
-        action_msg: `Usuario con email "${emailFromReq}" y id "${idFromReq}" eliminado.`,
+        action_msg: `Usuario con email "${userToBeDeleted.email}" y id "${userToBeDeleted.id}" eliminado.`,
       });
+
       return res
         .status(200)
         .send(
-          `Usuario con email "${emailFromReq}" y id "${idFromReq}" eliminado.`
+          `Usuario con email "${userToBeDeleted.email}" y id "${userToBeDeleted.id}" eliminado.`
         );
     }
   } catch (error: any) {
@@ -103,7 +105,7 @@ router.post("/cleanPostsOfUserId", jwtCheck, async (req: any, res) => {
         `El usuario con id "${reqUserId}" que realiza la request no es un admin.`
       );
       return res.status(403).send({
-        error: `El usuario con id "${reqUserId}" que realiza la request no es un admin.`,
+        error: `El usuario con id "${reqUserId.toString()}" que realiza la request no es un admin.`,
       });
     }
     if (passwordFromReq !== process.env.ADMIN_PASSWORD) {
@@ -112,7 +114,9 @@ router.post("/cleanPostsOfUserId", jwtCheck, async (req: any, res) => {
       );
       return res
         .status(403)
-        .send(`La password de administrador "${passwordFromReq}" no es válida`);
+        .send(
+          `La password de administrador "${passwordFromReq.toString()}" no es válida`
+        );
     }
     if (!req.body.userId) {
       throw new Error(
@@ -325,10 +329,18 @@ router.put("/setIsAdmin", jwtCheck, async (req: any, res) => {
     const idOfUserToSetIsAdminProp = req.body.userToAffect_id;
     const newIsAdminValue = req.body.newIsAdminValue;
 
+    let idOfUserToSetIsAdminPropSanitized = sanitizeID(
+      req.body.userToAffect_id
+    );
+    if (idOfUserToSetIsAdminProp !== idOfUserToSetIsAdminPropSanitized) {
+      console.log("idOfUserToSetIsAdminProp tiene caracteres inválidos");
+      throw new Error("idOfUserToSetIsAdminProp tiene caracteres inválidos");
+    }
+
     const newAdminAction: IAdminAction = {
       admin_id: reqAdminId,
       route: `/admin/setIsAdmin`,
-      action: `Setear/cambiar la prop "isAdmin" del user con id "${idOfUserToSetIsAdminProp}" a "${newIsAdminValue}".`,
+      action: `Setear/cambiar la prop "isAdmin" del user con id "${idOfUserToSetIsAdminPropSanitized}" a "${newIsAdminValue}".`,
       action_status: 0,
       action_msg: "",
     };
@@ -348,10 +360,12 @@ router.put("/setIsAdmin", jwtCheck, async (req: any, res) => {
         error: `Se debe tener rol de Super Admin para realizar esta acción.`,
       });
     }
-    const userToSetIsAdmin = await db.User.findByPk(idOfUserToSetIsAdminProp);
+    const userToSetIsAdmin = await db.User.findByPk(
+      idOfUserToSetIsAdminPropSanitized
+    );
     if (!userToSetIsAdmin) {
       throw new Error(
-        `No se encontró en la Data Base al usuario con el id ${idOfUserToSetIsAdminProp}`
+        `No se encontró en la Data Base al usuario con el id ${idOfUserToSetIsAdminPropSanitized}`
       );
     }
     if (newIsAdminValue !== true && newIsAdminValue !== false) {
@@ -362,15 +376,15 @@ router.put("/setIsAdmin", jwtCheck, async (req: any, res) => {
     userToSetIsAdmin.isAdmin = newIsAdminValue;
     await userToSetIsAdmin.save();
     console.log(
-      `Usuario con id ${idOfUserToSetIsAdminProp} fue seteado a isAdmin = ${newIsAdminValue}.`
+      `Usuario con id ${idOfUserToSetIsAdminPropSanitized} fue seteado a isAdmin = ${newIsAdminValue}.`
     );
     await db.Action.create({
       ...newAdminAction,
       action_status: 200,
-      action_msg: `Usuario con id ${idOfUserToSetIsAdminProp} fue seteado a isAdmin = ${newIsAdminValue}.`,
+      action_msg: `Usuario con id ${idOfUserToSetIsAdminPropSanitized} fue seteado a isAdmin = ${newIsAdminValue}.`,
     });
     return res.status(200).send({
-      msg: `Usuario con id ${idOfUserToSetIsAdminProp} fue seteado a isAdmin = ${newIsAdminValue}.`,
+      msg: `Usuario con id ${idOfUserToSetIsAdminPropSanitized} fue seteado a isAdmin = ${newIsAdminValue}.`,
     });
   } catch (error: any) {
     console.log(`Error en ruta admin/setIsAdmin. ${error.message}`);
@@ -386,10 +400,20 @@ router.put("/setIsSuperAdmin", jwtCheck, async (req: any, res) => {
     const idOfUserToSetIsSuperAdminProp = req.body.userToAffect_id;
     const newIsSuperAdminValue = req.body.newIsSuperAdminValue;
 
+    let idOfUserToSetIsSuperAdminPropSanitized = sanitizeID(
+      req.body.userToAffect_id
+    );
+    if (
+      idOfUserToSetIsSuperAdminProp !== idOfUserToSetIsSuperAdminPropSanitized
+    ) {
+      console.log("idOfUserToSetIsAdminProp tiene caracteres inválidos");
+      throw new Error("idOfUserToSetIsAdminProp tiene caracteres inválidos");
+    }
+
     const newAdminAction: IAdminAction = {
       admin_id: reqAdminId,
       route: `/admin/setIsSuperAdmin`,
-      action: `Setear/cambiar la prop "isSuperAdmin" del user con id "${idOfUserToSetIsSuperAdminProp}" a "${newIsSuperAdminValue}".`,
+      action: `Setear/cambiar la prop "isSuperAdmin" del user con id "${idOfUserToSetIsSuperAdminPropSanitized}" a "${newIsSuperAdminValue}".`,
       action_status: 0,
       action_msg: "",
     };
@@ -410,11 +434,11 @@ router.put("/setIsSuperAdmin", jwtCheck, async (req: any, res) => {
       });
     }
     const userToSetIsSuperAdmin = await db.User.findByPk(
-      idOfUserToSetIsSuperAdminProp
+      idOfUserToSetIsSuperAdminPropSanitized
     );
     if (!userToSetIsSuperAdmin) {
       throw new Error(
-        `No se encontró en la Data Base al usuario con el id ${idOfUserToSetIsSuperAdminProp}`
+        `No se encontró en la Data Base al usuario con el id ${idOfUserToSetIsSuperAdminPropSanitized}`
       );
     }
     if (newIsSuperAdminValue !== true && newIsSuperAdminValue !== false) {
@@ -425,15 +449,15 @@ router.put("/setIsSuperAdmin", jwtCheck, async (req: any, res) => {
     userToSetIsSuperAdmin.isSuperAdmin = newIsSuperAdminValue;
     await userToSetIsSuperAdmin.save();
     console.log(
-      `Usuario con id ${idOfUserToSetIsSuperAdminProp} fue seteado a isAdmin = ${newIsSuperAdminValue}.`
+      `Usuario con id ${idOfUserToSetIsSuperAdminPropSanitized} fue seteado a isAdmin = ${newIsSuperAdminValue}.`
     );
     await db.Action.create({
       ...newAdminAction,
       action_status: 200,
-      action_msg: `Usuario con id ${idOfUserToSetIsSuperAdminProp} fue seteado a isAdmin = ${newIsSuperAdminValue}.`,
+      action_msg: `Usuario con id ${idOfUserToSetIsSuperAdminPropSanitized} fue seteado a isAdmin = ${newIsSuperAdminValue}.`,
     });
     return res.status(200).send({
-      msg: `Usuario con id ${idOfUserToSetIsSuperAdminProp} fue seteado a isAdmin = ${newIsSuperAdminValue}.`,
+      msg: `Usuario con id ${idOfUserToSetIsSuperAdminPropSanitized} fue seteado a isAdmin = ${newIsSuperAdminValue}.`,
     });
   } catch (error: any) {
     console.log(`Error en ${req.path}. ${error.message}`);

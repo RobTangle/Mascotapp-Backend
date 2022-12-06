@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sanitize = exports.isValidId = exports.isUndefinedOrNull = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isString = exports.isEmail = exports.isValidURLImage = void 0;
+exports.sanitizeID = exports.sanitize = exports.isValidId = exports.isUndefinedOrNull = exports.isStringBetween1And50CharsLong = exports.isStringBetween1And101CharsLong = exports.isEmptyString = exports.isValidString = exports.isString = exports.isEmail = exports.isValidURLImage = void 0;
 // IS VALID URL:
 function isValidURLImage(argumento) {
     if (typeof argumento !== "string") {
@@ -83,6 +83,7 @@ function isValidId(argumento) {
     return false;
 }
 exports.isValidId = isValidId;
+// SANITIZE STRING TO PROTECT HTML CODE
 function sanitize(string) {
     const map = {
         "&": "&amp;",
@@ -96,3 +97,37 @@ function sanitize(string) {
     return string.replace(reg, (match) => map[match]);
 }
 exports.sanitize = sanitize;
+function sanitizeID(string) {
+    if (typeof string !== "string") {
+        console.log(`Error en sanitizeID. El typeof del id no es un string.`);
+        throw new Error("El id debe ser un string.");
+    }
+    if (string.length > 50) {
+        console.log("Error en sanitizeID. El string es demasiado largo.");
+        throw new Error("El id es demasiado largo.");
+    }
+    const map = {
+        "{": "",
+        "}": "",
+        "<": "",
+        ">": "",
+        "/": "",
+        ".": "",
+        ",": "",
+        $: "",
+        "%": "",
+        "(": "",
+        ")": "",
+        "!": "",
+        "|": "",
+        "[": "",
+        "]": "",
+        "´": "",
+        "`": "",
+        "&": "",
+        "'": "",
+    };
+    const reg = /[&<>'{},.$%()!´`\[\]/]/gi;
+    return string.replace(reg, (match) => map[match]);
+}
+exports.sanitizeID = sanitizeID;
