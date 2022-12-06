@@ -1,5 +1,10 @@
 const morgan = require("morgan");
 import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import helmet from "helmet";
+import { rateLimiter } from "../config/rateLimiter";
+import { corsOptions } from "../config/corsOptions";
 import usersRouter from "./routes/user/user-Routes";
 import animalRouter from "./routes/pet/pet-Routes";
 import checkoutRouter from "./routes/checkout/checkout-Routes";
@@ -8,27 +13,9 @@ import transactionsRouter from "./routes/transaction/transaction-Routes";
 import reviewsRouter from "./routes/review/review-Routes";
 import commentRouter from "./routes/comment/comment-Routes";
 import adminRouter from "./routes/admin/admin-Routes";
-import dotenv from "dotenv";
-import cors from "cors";
-import helmet from "helmet";
-import { rateLimiter } from "../config/rateLimiter";
 
 dotenv.config();
 const app = express();
-
-var corsOptions = {
-  origin: [
-    "https://mascotapps.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:3000/home",
-    "https://checkout.stripe.com",
-    "https://dev-nxuk8wmn.us.auth0.com",
-    "http://localhost:3001",
-  ],
-  headers: "*",
-  methods: "*",
-  credentials: true,
-};
 
 app.use(rateLimiter);
 app.use(helmet());
