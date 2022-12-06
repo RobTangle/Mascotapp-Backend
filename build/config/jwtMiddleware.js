@@ -1,5 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+require("dotenv").config();
+const JWKS_URI = process.env.JWKS_URI;
+const JWT_ISSUER = process.env.JWT_ISSUER;
+const JWT_AUDIENCE = process.env.JWT_AUDIENCE;
 const { expressjwt: jwt } = require("express-jwt");
 const jwks = require("jwks-rsa");
 const jwtCheck = jwt({
@@ -7,10 +11,10 @@ const jwtCheck = jwt({
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 15,
-        jwksUri: "https://dev-nxuk8wmn.us.auth0.com/.well-known/jwks.json",
+        jwksUri: JWKS_URI,
     }),
-    audience: "https://juka-production.up.railway.app/",
-    issuer: "https://dev-nxuk8wmn.us.auth0.com/",
+    audience: JWT_AUDIENCE,
+    issuer: JWT_ISSUER,
     algorithms: ["RS256"],
 });
 exports.default = jwtCheck;
