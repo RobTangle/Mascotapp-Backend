@@ -18,6 +18,7 @@ const index_1 = __importDefault(require("../../../models/index"));
 const jwtMiddleware_1 = __importDefault(require("../../../config/jwtMiddleware"));
 const UserValidators_1 = require("../../validators/UserValidators");
 const userAuxFn_1 = require("./userAuxFn");
+const GenericValidators_1 = require("../../validators/GenericValidators");
 const { GMAIL_PASS, GMAIL_USER } = process.env;
 const router = (0, express_1.Router)();
 const multiplierPoints = 1;
@@ -333,10 +334,14 @@ router.post("/buyProducts", jwtMiddleware_1.default, (req, res) => __awaiter(voi
                     pass: GMAIL_PASS,
                 },
             });
-            const msgMail = `Hola ${name} estamos preparando tu compra para enviarla a ${direccion}. Te daremos aviso cuando el producto esté en camino.`;
+            let nameParsed = (0, GenericValidators_1.sanitize)(name);
+            // let itemsParsed = sanitize(items);
+            let emailParsed = (0, GenericValidators_1.sanitize)(mail);
+            let direccionParsed = (0, GenericValidators_1.sanitize)(direccion);
+            let totalPointsParsed = (0, GenericValidators_1.sanitize)(totalPoints);
             const mailOptions = {
                 from: "service.mascotapp@gmail.com",
-                to: mail,
+                to: emailParsed,
                 subject: "Tu compra está siendo preparada",
                 html: `<!DOCTYPE html>
       <html lang="en">
@@ -367,12 +372,12 @@ router.post("/buyProducts", jwtMiddleware_1.default, (req, res) => __awaiter(voi
       
                   <div style="background-color: #ffffff; padding: 20px 0px 5px 0px; width: 100%; text-align: center;">
                       <h1>Registramos tu compra🙌🙌🙌</h1>
-                      <p>Hola ${name} estamos preparando tu compra para enviarla a ${direccion}. Te daremos aviso cuando el producto esté en camino.</p>
+                      <p>Hola ${nameParsed} estamos preparando tu compra para enviarla a ${direccionParsed}. Te daremos aviso cuando el producto esté en camino.</p>
       
                       <div>Productos: ${items.map((i) => {
                     return i.title;
                 })}</div>
-                        <div>Puntos: ${totalPoints}</div>
+                        <div>Puntos: ${totalPointsParsed}</div>
                       <!-- Gracias -->
                       <p style="margin-bottom: 50px;"><i>Atentamente:</i><br>El equipo de Mascotapp❤️❤️❤️</p>
                   </div>
