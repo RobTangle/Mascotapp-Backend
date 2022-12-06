@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const index_1 = __importDefault(require("../../../models/index"));
+const GenericValidators_1 = require("../../validators/GenericValidators");
 const { GMAIL_PASS, GMAIL_USER } = process.env;
 const route = (0, express_1.Router)();
 // -------- FUNCIONES AUXULIARES : -------------
@@ -60,6 +61,8 @@ route.post("/mailAdmin", (req, res) => __awaiter(void 0, void 0, void 0, functio
                 pass: GMAIL_PASS,
             },
         });
+        let emailSanitized = (0, GenericValidators_1.sanitize)(email);
+        let commentSanitized = (0, GenericValidators_1.sanitize)(comment);
         const mailOptions = {
             from: "service.mascotapp@gmail.com",
             to: "service.mascotapp@gmail.com",
@@ -92,8 +95,8 @@ route.post("/mailAdmin", (req, res) => __awaiter(void 0, void 0, void 0, functio
         <div style="padding: 20px 10px 20px 10px;">
 
             <div style="background-color: #ffffff; padding: 20px 0px 5px 0px; width: 100%; text-align: center;">
-                <h1>Llegó la siguiente consulta desde el mail ${email}</h1>
-                <p>${comment}
+                <h1>Llegó la siguiente consulta desde el mail ${emailSanitized}</h1>
+                <p>${commentSanitized}
                 </p>
 
                 <!-- Gracias -->
