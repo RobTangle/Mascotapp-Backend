@@ -52,8 +52,8 @@ router.post("/newComment", (req, res) => __awaiter(void 0, void 0, void 0, funct
         return res.status(200).send(newComment);
     }
     catch (error) {
-        console.log(`Error en newComment: ${error.message}`);
-        return res.status(404).send(`${error.message}`);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.get("/getComments", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -72,8 +72,8 @@ router.get("/getComments", (req, res) => __awaiter(void 0, void 0, void 0, funct
         return res.status(200).send(allTheComments);
     }
     catch (error) {
-        console.log(`Error en comments/getComments`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 exports.default = router;

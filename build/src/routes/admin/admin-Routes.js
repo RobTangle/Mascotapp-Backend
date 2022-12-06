@@ -69,15 +69,8 @@ router.post("/deleteUser", jwtMiddleware_1.default, (req, res) => __awaiter(void
         }
     }
     catch (error) {
-        console.log(`Error en /admin/deleteUser. ${error.message}`);
-        // await db.Action.create({
-        //   admin_id: req.auth?.sub,
-        //   route: `/admin/deleteUser`,
-        //   action: `delete User with id "${req.body.id}" and email "${req.body.email}"`,
-        //   action_status: 404,
-        //   error_msg: `${error.message}`,
-        // });
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 // CLEAN POSTS OF USER ID
@@ -128,8 +121,8 @@ router.post("/cleanPostsOfUserId", jwtMiddleware_1.default, (req, res) => __awai
             .send(`Número de posts destruidos: ${numberOfPostsDestroyed}`);
     }
     catch (error) {
-        console.log(`Error en la ruta /admin/cleanPostsOfUserId. ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 // CLEAN REVIEWS TO USER
@@ -178,8 +171,8 @@ router.post("/cleanReviewsToUser", jwtMiddleware_1.default, (req, res) => __awai
             .send(`Cantidad de reviews soft destroyed: ${reviewsErased}`);
     }
     catch (error) {
-        console.log(`Error en /cleanReviewsToUser. ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 // DELETE PETS WITH NO UserId
@@ -227,7 +220,8 @@ router.post("/deletePetsWithNoUserId", jwtMiddleware_1.default, (req, res) => __
             .send(`Cantidad de Mascotas/Posts eliminados: ${petsDestroyed}.`);
     }
     catch (error) {
-        console.log(`Error en /admin/deletePetsWithNoUserId. ${error.message}`);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 // DELETE PET
@@ -263,7 +257,8 @@ router.post("/deletePet", jwtMiddleware_1.default, (req, res) => __awaiter(void 
         return res.status(404).send("la publicación no existe");
     }
     catch (error) {
-        console.log(`Error en /admin/deletePets ${error.message}`);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 // SET isAdmin a TRUE o FALSE. Sólo la puede usar el SUPER ADMIN.
@@ -310,7 +305,7 @@ router.put("/setIsAdmin", jwtMiddleware_1.default, (req, res) => __awaiter(void 
     }
     catch (error) {
         console.log(`Error en ruta admin/setIsAdmin. ${error.message}`);
-        return res.status(400).send({ error: `${error.message}` });
+        return res.status(400).send({ error: `Algo salió mal :(` });
     }
 }));
 // SET IS SUPER ADMIN. SÓLO LA PUEDE USAR UN SUPER ADMIN.
@@ -356,8 +351,8 @@ router.put("/setIsSuperAdmin", jwtMiddleware_1.default, (req, res) => __awaiter(
         });
     }
     catch (error) {
-        console.log(`Error en ruta admin/setIsAdmin. ${error.message}`);
-        return res.status(400).send({ error: `${error.message}` });
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 // CHEQUEAR SI USER LOGUEADO CON JWT ES ADMIN O NO
@@ -387,7 +382,7 @@ router.post("/hasAdminPowers", jwtMiddleware_1.default, (req, res) => __awaiter(
     }
     catch (error) {
         console.log(`Error en "admin/hasAdminPowers". ${error.message}`);
-        return res.status(400).send({ error: `${error.message}`, msg: false });
+        return res.status(400).send({ error: `Algo salió mal.`, msg: false });
     }
 }));
 // ----   RUTAS MULTIPLICADORAS:  -----------
@@ -409,8 +404,8 @@ router.get("/createMultiplier", jwtMiddleware_1.default, (req, res) => __awaiter
         return res.send("el multiplicador ya existe");
     }
     catch (error) {
-        console.log(`Error en /admin/changeMultiplier. ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.post("/changeMultiplier", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -447,8 +442,8 @@ router.post("/changeMultiplier", jwtMiddleware_1.default, (req, res) => __awaite
             .send(`multiplicador cambiado. Valor actual = ${multiplier.number}`);
     }
     catch (error) {
-        console.log(`Error en /admin/changeMultiplier. ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 // ------ RUTAS DEPRECADAS O YA SIN SENTIDO : ------
@@ -474,8 +469,8 @@ router.post("/mutateActiveToActivo", jwtMiddleware_1.default, (req, res) => __aw
         return res.status(200).send({ transactionsModified: `${numberModified}` });
     }
     catch (error) {
-        console.log(`Error en el /admin/mutateActiveToActivo`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.post("/banUser", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -516,8 +511,8 @@ router.post("/banUser", jwtMiddleware_1.default, (req, res) => __awaiter(void 0,
         return res.status(404).send("el usuario no existe");
     }
     catch (error) {
-        console.log(`Error en /admin/banUser. ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 //BORRAR PETS QUE TIENEN UN UserId de un User que no existe en la DB
@@ -567,8 +562,8 @@ router.delete("/purgePetsWithFalseUser", jwtMiddleware_1.default, (req, res) => 
             .send(`Cantidad de mascotas destruidas: ${numberOfPetsPurged}`);
     }
     catch (error) {
-        console.log(`Error en admin/purgePetsWithFalseUser. ${error.message}`);
-        return res.status(400).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.post("/getAdminActions", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -591,7 +586,7 @@ router.post("/getAdminActions", jwtMiddleware_1.default, (req, res) => __awaiter
     }
     catch (error) {
         console.log(`Error en "admin/getAdminActions". ${error.message}`);
-        return res.status(400).send({ error: error.message });
+        return res.status(400).send({ error: "Algo salió mal." });
     }
 }));
 exports.default = router;

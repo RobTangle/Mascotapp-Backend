@@ -17,13 +17,7 @@ const models_1 = __importDefault(require("../../../models"));
 // ---------- FUNCIONES AUXILIARES PARA LAS RUTAS: ------------
 const getAllDonations = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log("en function getAllDonations");
-    try {
-        const allDonations = yield models_1.default.Donation.findAll();
-        return allDonations;
-    }
-    catch (error) {
-        console.log(error.message);
-        return error;
-    }
+    const allDonations = yield models_1.default.Donation.findAll();
+    return allDonations;
 });
 exports.getAllDonations = getAllDonations;

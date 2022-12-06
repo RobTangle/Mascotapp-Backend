@@ -29,8 +29,8 @@ route.get("/addVisitor", (req, res) => __awaiter(void 0, void 0, void 0, functio
         return res.sendStatus(201);
     }
     catch (error) {
-        console.log(`Error en /visitor/`);
-        return error.message;
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 route.get("/numbervisitors", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -41,8 +41,8 @@ route.get("/numbervisitors", (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.status(200).send(`${numberOfVisitors}`);
     }
     catch (error) {
-        console.log(`Error en visitors/numberVisitors. ${error.message}`);
-        res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 route.post("/mailAdmin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -122,8 +122,8 @@ route.post("/mailAdmin", (req, res) => __awaiter(void 0, void 0, void 0, functio
         });
     }
     catch (error) {
-        console.log(`Error en /mailAdmin. ${error.message}`);
-        return res.status(404).send(error);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 exports.default = route;

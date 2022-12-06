@@ -29,8 +29,8 @@ router.get("/allTransactions", (req, res) => __awaiter(void 0, void 0, void 0, f
         return res.status(200).send(allTransactions);
     }
     catch (error) {
-        console.log(`Error en /transactions/allTransactions`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.get("/transactionsCompleted", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -42,8 +42,8 @@ router.get("/transactionsCompleted", (req, res) => __awaiter(void 0, void 0, voi
         return res.status(200).send(transactionsCompleted);
     }
     catch (error) {
-        console.log(`Error en /transactions/transactionsCompleted`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.post("/postSuccess", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -158,8 +158,8 @@ router.post("/postSuccess", jwtMiddleware_1.default, (req, res) => __awaiter(voi
         throw new Error("No puedes modificar el estado de esta mascota porque no eres quién la publicó.");
     }
     catch (error) {
-        console.log(`Error en /transactions/postSuccess. ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.post("/cancelPost", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -196,8 +196,8 @@ router.post("/cancelPost", jwtMiddleware_1.default, (req, res) => __awaiter(void
         throw new Error("No puedes modificar el estado de esta mascota porque no eres quién la publicó.");
     }
     catch (error) {
-        console.log(`Error en /Transactions/cancelPost. ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 //! DEPRECATED
@@ -215,8 +215,8 @@ router.post("/getUserTransactions", jwtMiddleware_1.default, (req, res) => __awa
         return res.status(200).send(userTransactions);
     }
     catch (error) {
-        console.log(`Error en /Transactions/allTransactions. ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.post("/newTransaction", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -272,8 +272,8 @@ router.post("/newTransaction", jwtMiddleware_1.default, (req, res) => __awaiter(
             .send({ msg: "nueva transacción creada", createdTransaction });
     }
     catch (error) {
-        console.log(`Error en /Transactions/allTransactions. ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.put("/transactionCheck", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -297,8 +297,8 @@ router.put("/transactionCheck", jwtMiddleware_1.default, (req, res) => __awaiter
         res.status(200).send({ msg: "status checked" });
     }
     catch (error) {
-        console.log(`Error en /Transactions/allTransactions`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 exports.default = router;
