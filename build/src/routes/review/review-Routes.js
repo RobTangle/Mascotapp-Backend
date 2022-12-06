@@ -27,8 +27,8 @@ router.get("/allReviews", (req, res) => __awaiter(void 0, void 0, void 0, functi
         return res.status(200).send(allReviews);
     }
     catch (error) {
-        console.log(`Error en /reviews/allReviews`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.post("/newReview", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -87,8 +87,8 @@ router.post("/newReview", jwtMiddleware_1.default, (req, res) => __awaiter(void 
             .send({ msg: "Transacción no válida para estos usuarios." });
     }
     catch (error) {
-        console.log(`Error en ruta /newReview.  ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.post("/getReviewsToUser", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -109,8 +109,8 @@ router.post("/getReviewsToUser", (req, res) => __awaiter(void 0, void 0, void 0,
         return res.status(200).send(reviewsToUser);
     }
     catch (error) {
-        console.log(`Error en /reviews/getReviewsOfUser. ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 exports.default = router;

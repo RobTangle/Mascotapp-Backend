@@ -32,18 +32,6 @@ const authCheck = (req, res, next) => {
     }
 };
 // ----- ------ ------- RUTAS :  ------ ------- -------
-//GET ALL USERS FROM DB:  //! Hay que dejarla comentada ( o borrarla) porque no es seguro poder tener toda la data de los users registrados:
-router.get("/", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("entré al get de Users!");
-    try {
-        let allTheUsers = yield (0, userAuxFn_1.getAllUsers)();
-        // console.log(allTheUsers);
-        return res.status(200).send(allTheUsers);
-    }
-    catch (error) {
-        return res.status(404).send(error.message);
-    }
-}));
 // GET NUMBER OF USERS IN DB:
 router.get("/numberOfUsersInDB", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Entré a la route /numberOfUsersInDB");
@@ -54,7 +42,8 @@ router.get("/numberOfUsersInDB", (req, res) => __awaiter(void 0, void 0, void 0,
         return res.status(200).send(numberOfUsersInDBtoString);
     }
     catch (error) {
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send({ msg: "Lo siento. Hubo un error." });
     }
 }));
 // GET CONTACT INFO / PET ID
@@ -85,8 +74,8 @@ router.get("/contactinfo/:petid", (req, res) => __awaiter(void 0, void 0, void 0
         return res.status(200).send(contactInfoOfOwner);
     }
     catch (error) {
-        console.log(`error en /contactinfo/:petid = ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send({ msg: "Lo siento. Hubo un error." });
     }
 }));
 // GET(post) ALL PETS OF USER ID:
@@ -117,8 +106,8 @@ router.get("/getallpetsofuser", jwtMiddleware_1.default, (req, res) => __awaiter
         }
     }
     catch (error) {
-        console.log(`error en el /users/getallpetsofusers: ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send({ msg: "Lo siento. Hubo un error." });
     }
 }));
 router.delete("/deletePet", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -150,8 +139,8 @@ router.delete("/deletePet", jwtMiddleware_1.default, (req, res) => __awaiter(voi
         }
     }
     catch (error) {
-        console.log(`Hubo un error en el users/deletepet = ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send({ msg: "Lo siento. Hubo un error." });
     }
 }));
 router.post("/newuser", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -189,8 +178,8 @@ router.post("/newuser", jwtMiddleware_1.default, (req, res) => __awaiter(void 0,
         }
     }
     catch (error) {
-        console.log(error.message);
-        res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send({ msg: "Lo siento. Hubo un error." });
     }
 }));
 router.get("/exists", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -216,8 +205,8 @@ router.get("/exists", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, v
         }
     }
     catch (error) {
-        console.log(`Error en users/exists. ${error.message}`);
-        return res.status(404).send(error);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send({ msg: "Lo siento. Hubo un error." });
     }
 }));
 router.put("/update", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -243,7 +232,8 @@ router.put("/update", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, v
         return res.status(200).send(newProfile);
     }
     catch (error) {
-        res.status(400).send(error);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send({ msg: "Lo siento. Hubo un error." });
     }
 }));
 router.get("/getMultipleUserInfo", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -272,8 +262,8 @@ router.get("/getMultipleUserInfo", jwtMiddleware_1.default, (req, res) => __awai
         }
     }
     catch (error) {
-        console.log(`Error en /users/getMultipleUserInfo. ${error.message}`);
-        return res.status(400).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send({ msg: "Lo siento. Hubo un error." });
     }
 }));
 router.get("/ranking", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -287,8 +277,8 @@ router.get("/ranking", (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(200).send(topTen);
     }
     catch (error) {
-        console.log(`Error en /users/ranking. ${error.message}`);
-        return res.status(400).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send({ msg: "Lo siento. Hubo un error." });
     }
 }));
 router.get("/points", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -304,8 +294,8 @@ router.get("/points", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, v
         return res.status(200).send("no existe el usuario");
     }
     catch (error) {
-        console.log(`Error en /users/points ${error.message}`);
-        return res.status(400).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send({ msg: "Lo siento. Hubo un error." });
     }
 }));
 router.get("/rankingGaveAdoption", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -319,8 +309,8 @@ router.get("/rankingGaveAdoption", (req, res) => __awaiter(void 0, void 0, void 
         res.status(200).send(topTen);
     }
     catch (error) {
-        console.log(`Error en /users/rankingGaveAdoption. ${error.message}`);
-        return res.status(400).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send({ msg: "Lo siento. Hubo un error." });
     }
 }));
 router.post("/buyProducts", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -414,8 +404,8 @@ router.post("/buyProducts", jwtMiddleware_1.default, (req, res) => __awaiter(voi
         return res.status(404).send("el usuario no existe");
     }
     catch (error) {
-        console.log(`Error en /users/buyProducts. ${error.message}`);
-        return res.status(400).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send({ msg: "Lo siento. Hubo un error." });
     }
 }));
 // DONATE POINTS:
@@ -446,7 +436,7 @@ router.post("/donatePoints", jwtMiddleware_1.default, (req, res) => __awaiter(vo
         });
     }
     catch (error) {
-        console.log(`Error en /users/donatePoints. ${error.message}`);
+        console.log(`Error en ${req.path}. ${error.message}`);
         return res.status(400).send({ msg: "Lo siento. Hubo un error." });
     }
 }));

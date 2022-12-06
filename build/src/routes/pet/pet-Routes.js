@@ -25,7 +25,7 @@ const router = (0, express_1.Router)();
 // aca tiene que haber validador porque solo usuarios registrados pueden acceder a esta ruta
 //POST A PET:
 router.post("/postNewPet", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a;
     console.log(`Entré a users/postnewpet`);
     try {
         const id = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.sub;
@@ -55,20 +55,19 @@ router.post("/postNewPet", jwtMiddleware_1.default, (req, res) => __awaiter(void
         }
     }
     catch (error) {
-        console.log(`Error en /postnewpet. ${error.message}`);
-        console.log(`req.auth.sub de la request = '${(_b = req.auth) === null || _b === void 0 ? void 0 : _b.sub}'`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 //PUT Update detalles de la mascota
 router.put("/update", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _c, _d;
+    var _b, _c;
     console.log(`Entré a pets/update`);
     console.log(`req.body = ${req.body}`);
     try {
-        const userId = (_c = req.auth) === null || _c === void 0 ? void 0 : _c.sub;
+        const userId = (_b = req.auth) === null || _b === void 0 ? void 0 : _b.sub;
         const { id } = req.body;
-        console.log(`req.body.image = ${(_d = req.body) === null || _d === void 0 ? void 0 : _d.image}`);
+        console.log(`req.body.image = ${(_c = req.body) === null || _c === void 0 ? void 0 : _c.image}`);
         let validatedPetFromReq = (0, AnimalValidators_1.validateUpdatedPet)(req.body);
         const newProfile = yield index_1.default.Animal.update(validatedPetFromReq, {
             where: {
@@ -80,8 +79,8 @@ router.put("/update", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, v
         return res.status(200).send(newProfile);
     }
     catch (error) {
-        console.log(`Error en la ruta "/pets/update". ${error.message}`);
-        return res.status(400).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 // GET NUMBER OF PETS IN DB:
@@ -93,11 +92,12 @@ router.get("/numberOfPetsInDB", (req, res) => __awaiter(void 0, void 0, void 0, 
         return res.status(200).send(numberOfPetsInDBtoString);
     }
     catch (error) {
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 //GET ALL SPECIES:
-router.get("/especies", (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/especies", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("entré al GET pets/especies");
     try {
         let speciesArray = (0, petAuxFn_1.mapSpecies)();
@@ -105,11 +105,12 @@ router.get("/especies", (_req, res) => __awaiter(void 0, void 0, void 0, functio
         return res.status(200).send(speciesArray);
     }
     catch (error) {
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 //GET ALL PETS:
-router.get("/", (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("entré al GET pets/ ");
     try {
         let allThePetsNotTransacted = yield (0, petAuxFn_1.getAllActivePets)();
@@ -117,7 +118,8 @@ router.get("/", (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(200).send(allThePetsNotTransacted);
     }
     catch (error) {
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 //GET ALL DOGS
@@ -130,7 +132,8 @@ router.get("/perros", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(200).send(notTransactedDogs);
     }
     catch (error) {
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 //GET ALL CATS
@@ -143,7 +146,8 @@ router.get("/gatos", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         return res.status(200).send(notTransactedCats);
     }
     catch (error) {
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 //GET ALL OTHER SPECIES
@@ -156,7 +160,8 @@ router.get("/otra", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         return res.status(200).send(notTransactedOtherSpec);
     }
     catch (error) {
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 //GET ALL LOST
@@ -169,7 +174,8 @@ router.get("/perdido", (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.status(200).send(notTransactedLostPets);
     }
     catch (error) {
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 //GET ALL FOUND
@@ -182,7 +188,8 @@ router.get("/encontrado", (req, res) => __awaiter(void 0, void 0, void 0, functi
         return res.status(200).send(notTransactedFoundPets);
     }
     catch (error) {
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 //GET ALL IN ADOPTION
@@ -195,7 +202,8 @@ router.get("/adopcion", (req, res) => __awaiter(void 0, void 0, void 0, function
         return res.status(200).send(notTransactedInAdoptionPets);
     }
     catch (error) {
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.get("/search", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -208,8 +216,8 @@ router.get("/search", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(200).send(notTransactedResultPets);
     }
     catch (error) {
-        console.log(`Hubo un error ruta GET pets/search. Error message: ${error.message}`);
-        return error.message;
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.get("/success", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -221,8 +229,8 @@ router.get("/success", (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.send(pets);
     }
     catch (error) {
-        console.log(`retornando error en GET pets/success ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.get("/successAdoptions", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -232,8 +240,8 @@ router.get("/successAdoptions", (req, res) => __awaiter(void 0, void 0, void 0, 
         res.send(pets);
     }
     catch (error) {
-        console.log(`retornando error en GET pets/successAdoptions ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.get("/successFound", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -245,8 +253,8 @@ router.get("/successFound", (req, res) => __awaiter(void 0, void 0, void 0, func
         res.send(pets);
     }
     catch (error) {
-        console.log(`retornando error en GET pets/successFound ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.post("/subscribe", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -259,8 +267,8 @@ router.post("/subscribe", (req, res) => __awaiter(void 0, void 0, void 0, functi
         return res.status(200).send("Subscripción creada correctamente");
     }
     catch (error) {
-        console.log(`Error en pets/subscribe. ${error.message}`);
-        return res.status(400).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.post("/desubscribe", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -272,8 +280,8 @@ router.post("/desubscribe", (req, res) => __awaiter(void 0, void 0, void 0, func
         res.status(200).send(`Subscripción borrada exitosamente ${usuario}`);
     }
     catch (error) {
-        console.log("fallo /desubscribe");
-        return res.status(400).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 router.post("/notify", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -302,16 +310,16 @@ router.post("/notify", (req, res) => __awaiter(void 0, void 0, void 0, function*
 }));
 //GET BY ID:
 router.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _e;
-    console.log(`Entré al GET pets/:id con params.id = ${(_e = req === null || req === void 0 ? void 0 : req.params) === null || _e === void 0 ? void 0 : _e.id}`);
+    var _d;
+    console.log(`Entré al GET pets/:id con params.id = ${(_d = req === null || req === void 0 ? void 0 : req.params) === null || _d === void 0 ? void 0 : _d.id}`);
     try {
         let paramsID = req.params.id;
         let petFoundById = yield (0, petAuxFn_1.getPetById)(paramsID);
         return res.status(200).send(petFoundById);
     }
     catch (error) {
-        console.log(`retornando error en GET pets/:id: ${error.message}`);
-        return res.status(404).send(error.message);
+        console.log(`Error en ${req.path}. ${error.message}`);
+        return res.status(400).send("Lo siento. Hubo un error.");
     }
 }));
 exports.default = router;
