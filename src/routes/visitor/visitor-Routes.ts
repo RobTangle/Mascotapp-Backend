@@ -1,6 +1,7 @@
 import { Router } from "express";
 import db from "../../../models/index";
 import { visitor } from "../../types/visitorTypes";
+import { sanitize } from "../../validators/GenericValidators";
 const { GMAIL_PASS, GMAIL_USER } = process.env;
 
 const route = Router();
@@ -53,6 +54,9 @@ route.post("/mailAdmin", async (req, res) => {
       },
     });
 
+    let emailSanitized = sanitize(email);
+    let commentSanitized = sanitize(comment);
+
     const mailOptions = {
       from: "service.mascotapp@gmail.com",
       to: "service.mascotapp@gmail.com",
@@ -85,8 +89,8 @@ route.post("/mailAdmin", async (req, res) => {
         <div style="padding: 20px 10px 20px 10px;">
 
             <div style="background-color: #ffffff; padding: 20px 0px 5px 0px; width: 100%; text-align: center;">
-                <h1>Llegó la siguiente consulta desde el mail ${email}</h1>
-                <p>${comment}
+                <h1>Llegó la siguiente consulta desde el mail ${emailSanitized}</h1>
+                <p>${commentSanitized}
                 </p>
 
                 <!-- Gracias -->
