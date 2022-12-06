@@ -25,6 +25,7 @@ import {
   getSomeUserInfo,
   parsePetsPostedByUser,
 } from "./userAuxFn";
+import { sanitize } from "../../validators/GenericValidators";
 const { GMAIL_PASS, GMAIL_USER } = process.env;
 
 const router = Router();
@@ -366,11 +367,15 @@ router.post("/buyProducts", jwtCheck, async (req: any, res) => {
         },
       });
 
-      const msgMail = `Hola ${name} estamos preparando tu compra para enviarla a ${direccion}. Te daremos aviso cuando el producto esté en camino.`;
+      let nameParsed = sanitize(name);
+      // let itemsParsed = sanitize(items);
+      let emailParsed = sanitize(mail);
+      let direccionParsed = sanitize(direccion);
+      let totalPointsParsed = sanitize(totalPoints);
 
       const mailOptions = {
         from: "service.mascotapp@gmail.com",
-        to: mail,
+        to: emailParsed,
         subject: "Tu compra está siendo preparada",
         html: `<!DOCTYPE html>
       <html lang="en">
@@ -401,12 +406,12 @@ router.post("/buyProducts", jwtCheck, async (req: any, res) => {
       
                   <div style="background-color: #ffffff; padding: 20px 0px 5px 0px; width: 100%; text-align: center;">
                       <h1>Registramos tu compra🙌🙌🙌</h1>
-                      <p>Hola ${name} estamos preparando tu compra para enviarla a ${direccion}. Te daremos aviso cuando el producto esté en camino.</p>
+                      <p>Hola ${nameParsed} estamos preparando tu compra para enviarla a ${direccionParsed}. Te daremos aviso cuando el producto esté en camino.</p>
       
                       <div>Productos: ${items.map((i: any) => {
                         return i.title;
                       })}</div>
-                        <div>Puntos: ${totalPoints}</div>
+                        <div>Puntos: ${totalPointsParsed}</div>
                       <!-- Gracias -->
                       <p style="margin-bottom: 50px;"><i>Atentamente:</i><br>El equipo de Mascotapp❤️❤️❤️</p>
                   </div>
