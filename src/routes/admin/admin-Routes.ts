@@ -15,7 +15,7 @@ import {
   getAllReviewsToUser,
   getPostsOfUser,
 } from "./adminAuxFn";
-import { sanitizeID } from "../../validators/GenericValidators";
+import { sanitize, sanitizeID } from "../../validators/GenericValidators";
 
 dotenv.config();
 
@@ -92,20 +92,35 @@ router.post("/cleanPostsOfUserId", jwtCheck, async (req: any, res) => {
   try {
     const passwordFromReq = req.body.password;
     const userId = req.body.userId;
+    const userIdSanitized = sanitizeID(userId);
+
     const reqUserId = req.auth.sub;
+    let reqUserIdSanitized = sanitizeID(reqUserId);
+
+    if (userId !== userIdSanitized) {
+      console.log("Error al comparar userId con userIdSanitized");
+      throw new Error("El user id no es válido");
+    }
+
+    if (reqUserId !== reqUserIdSanitized) {
+      console.log("Error al comparar reqUserId con reqUserIdSanitized");
+      throw new Error("El reqUserId no es válido");
+    }
+
     const newAdminAction: IAdminAction = {
       admin_id: reqUserId,
       route: `/admin/cleanPostsOfUserId`,
       action: `Delete posts of User with id "${req.body.userId}". IP: ${req.ip}`,
       action_status: 0,
     };
-    const reqUserIsAdmin = await checkIfJWTisAdmin(reqUserId);
+
+    const reqUserIsAdmin = await checkIfJWTisAdmin(reqUserIdSanitized);
     if (!reqUserIsAdmin) {
       console.log(
         `El usuario con id "${reqUserId}" que realiza la request no es un admin.`
       );
       return res.status(403).send({
-        error: `El usuario con id "${reqUserId.toString()}" que realiza la request no es un admin.`,
+        error: `El usuario con id "${reqUserIdSanitized}" que realiza la request no es un admin.`,
       });
     }
     if (passwordFromReq !== process.env.ADMIN_PASSWORD) {
@@ -115,7 +130,9 @@ router.post("/cleanPostsOfUserId", jwtCheck, async (req: any, res) => {
       return res
         .status(403)
         .send(
-          `La password de administrador "${passwordFromReq.toString()}" no es válida`
+          `La password de administrador "${sanitizeID(
+            passwordFromReq
+          )}" no es válida`
         );
     }
     if (!req.body.userId) {

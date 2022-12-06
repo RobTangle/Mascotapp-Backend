@@ -80,25 +80,35 @@ router.post("/cleanPostsOfUserId", jwtMiddleware_1.default, (req, res) => __awai
     try {
         const passwordFromReq = req.body.password;
         const userId = req.body.userId;
+        const userIdSanitized = (0, GenericValidators_1.sanitizeID)(userId);
         const reqUserId = req.auth.sub;
+        let reqUserIdSanitized = (0, GenericValidators_1.sanitizeID)(reqUserId);
+        if (userId !== userIdSanitized) {
+            console.log("Error al comparar userId con userIdSanitized");
+            throw new Error("El user id no es válido");
+        }
+        if (reqUserId !== reqUserIdSanitized) {
+            console.log("Error al comparar reqUserId con reqUserIdSanitized");
+            throw new Error("El reqUserId no es válido");
+        }
         const newAdminAction = {
             admin_id: reqUserId,
             route: `/admin/cleanPostsOfUserId`,
             action: `Delete posts of User with id "${req.body.userId}". IP: ${req.ip}`,
             action_status: 0,
         };
-        const reqUserIsAdmin = yield (0, adminAuxFn_1.checkIfJWTisAdmin)(reqUserId);
+        const reqUserIsAdmin = yield (0, adminAuxFn_1.checkIfJWTisAdmin)(reqUserIdSanitized);
         if (!reqUserIsAdmin) {
             console.log(`El usuario con id "${reqUserId}" que realiza la request no es un admin.`);
             return res.status(403).send({
-                error: `El usuario con id "${reqUserId.toString()}" que realiza la request no es un admin.`,
+                error: `El usuario con id "${reqUserIdSanitized}" que realiza la request no es un admin.`,
             });
         }
         if (passwordFromReq !== process.env.ADMIN_PASSWORD) {
             console.log(`La password de administrador ${passwordFromReq} no es válida`);
             return res
                 .status(403)
-                .send(`La password de administrador "${passwordFromReq.toString()}" no es válida`);
+                .send(`La password de administrador "${(0, GenericValidators_1.sanitizeID)(passwordFromReq)}" no es válida`);
         }
         if (!req.body.userId) {
             throw new Error(`Debe ingresar un userId. Usted envió "${req.body.userId}"`);
