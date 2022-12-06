@@ -1,6 +1,6 @@
 export const corsOptions = {
   origin: [
-    "https://mascotapps.vercel.app",
+    "https://mascotapp.vercel.app",
     "http://localhost:3000",
     "http://localhost:3000/home",
     "https://checkout.stripe.com",

@@ -14,9 +14,5 @@ models_1.default.sequelize.sync({ alter: true }).then(() => {
         console.log(`App listening on port ${config.server.port}`);
         console.log("**** **** **** **** **** **** **** **** **** **** **** **** **** **** **** ");
         console.log("**** **** **** **** **** **** **** **** **** **** **** **** **** **** **** ");
-        // animalSeeds.forEach(async (pet) => {
-        //   let validatedPet = validateNewPet(pet);
-        //   await db.Animal.create(validatedPet);
-        // });
     });
 });

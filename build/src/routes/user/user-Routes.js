@@ -155,10 +155,10 @@ router.delete("/deletePet", jwtMiddleware_1.default, (req, res) => __awaiter(voi
     }
 }));
 router.post("/newuser", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _e;
     console.log(`Entré en /user/newUser`);
     try {
-        const id = (_e = req.auth) === null || _e === void 0 ? void 0 : _e.sub;
+        const reqAuth = req.auth;
+        const id = reqAuth === null || reqAuth === void 0 ? void 0 : reqAuth.sub;
         if (!id) {
             throw new Error(`El id por token "${id}" es falso`);
         }
@@ -172,7 +172,7 @@ router.post("/newuser", jwtMiddleware_1.default, (req, res) => __awaiter(void 0,
             throw new Error(`El email ${email} ya está registrado. Por favor, use otro email para el registro.`);
         }
         const newUserFromReq = {
-            id: req.auth.id,
+            id: id,
             email: email,
             name: name,
             contact: contact,
@@ -194,10 +194,10 @@ router.post("/newuser", jwtMiddleware_1.default, (req, res) => __awaiter(void 0,
     }
 }));
 router.get("/exists", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _f;
+    var _e;
     console.log(`Entré al GET users/exists`);
     try {
-        const id = (_f = req.auth) === null || _f === void 0 ? void 0 : _f.sub;
+        const id = (_e = req.auth) === null || _e === void 0 ? void 0 : _e.sub;
         console.log(`Buscando si existe el usuario con id ${id}`);
         let user = yield index_1.default.User.findByPk(id);
         //chequeo si está baneado:
@@ -221,12 +221,12 @@ router.get("/exists", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, v
     }
 }));
 router.put("/update", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _g;
+    var _f;
     console.log(`Entré a users/update`);
     console.log(`Me llegó por body: `);
     console.log(req.body);
     try {
-        const id = (_g = req.auth) === null || _g === void 0 ? void 0 : _g.sub;
+        const id = (_f = req.auth) === null || _f === void 0 ? void 0 : _f.sub;
         if (!id) {
             throw new Error(`El id del token "${id}" no es válido.`);
         }
@@ -247,11 +247,11 @@ router.put("/update", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, v
     }
 }));
 router.get("/getMultipleUserInfo", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _h, _j;
+    var _g, _h;
     console.log(`Entré a la ruta /users/getMultipleUserInfo`);
-    console.log(`req.auth.sub = ${(_h = req.auth) === null || _h === void 0 ? void 0 : _h.sub}`);
+    console.log(`req.auth.sub = ${(_g = req.auth) === null || _g === void 0 ? void 0 : _g.sub}`);
     try {
-        if ((_j = req.auth) === null || _j === void 0 ? void 0 : _j.sub) {
+        if ((_h = req.auth) === null || _h === void 0 ? void 0 : _h.sub) {
             let userId = req.auth.sub;
             let someUserInfo = yield (0, userAuxFn_1.getSomeUserInfo)(userId); //obj con props
             let userReviewsRecived = yield (0, userAuxFn_1.getAllReviewsRecived)(userId); //arreglo de objs
@@ -292,10 +292,10 @@ router.get("/ranking", (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 }));
 router.get("/points", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _k;
+    var _j;
     console.log(`Estoy en /users/points.`);
     try {
-        const id = (_k = req.auth) === null || _k === void 0 ? void 0 : _k.sub;
+        const id = (_j = req.auth) === null || _j === void 0 ? void 0 : _j.sub;
         const user = yield index_1.default.User.findOne({ where: { id: id } });
         if (user) {
             return res.status(200).send({ points: user.points });
@@ -324,11 +324,11 @@ router.get("/rankingGaveAdoption", (req, res) => __awaiter(void 0, void 0, void 
     }
 }));
 router.post("/buyProducts", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _l;
+    var _k;
     console.log(`Estoy en /users/buyProducts.`);
     try {
         const { name, items, totalPoints, mail, direccion } = req.body;
-        let userID = (_l = req.auth) === null || _l === void 0 ? void 0 : _l.sub;
+        let userID = (_k = req.auth) === null || _k === void 0 ? void 0 : _k.sub;
         const user = yield index_1.default.User.findOne({ where: { id: userID } });
         if (user) {
             console.log(user, totalPoints, items);
@@ -420,10 +420,10 @@ router.post("/buyProducts", jwtMiddleware_1.default, (req, res) => __awaiter(voi
 }));
 // DONATE POINTS:
 router.post("/donatePoints", jwtMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _m;
+    var _l;
     console.log(`Estoy en /users/donatePoints.`);
     try {
-        const id = (_m = req.auth) === null || _m === void 0 ? void 0 : _m.sub;
+        const id = (_l = req.auth) === null || _l === void 0 ? void 0 : _l.sub;
         if (!id) {
             throw new Error(`El req.auth.sub es falso`);
         }
