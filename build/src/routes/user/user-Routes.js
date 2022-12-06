@@ -375,7 +375,7 @@ router.post("/buyProducts", jwtMiddleware_1.default, (req, res) => __awaiter(voi
                       <p>Hola ${nameParsed} estamos preparando tu compra para enviarla a ${direccionParsed}. Te daremos aviso cuando el producto esté en camino.</p>
       
                       <div>Productos: ${items.map((i) => {
-                    return i.title;
+                    return (0, GenericValidators_1.sanitize)(i.title);
                 })}</div>
                         <div>Puntos: ${totalPointsParsed}</div>
                       <!-- Gracias -->

@@ -382,7 +382,7 @@ router.post("/hasAdminPowers", jwtMiddleware_1.default, (req, res) => __awaiter(
         const jwtId = req.auth.sub;
         const passwordFromReq = req.body.password;
         if (passwordFromReq !== process.env.ADMIN_PASSWORD) {
-            console.log(`La password ${passwordFromReq} no es válida.`);
+            console.log(`La password no es válida.`);
             return res.status(403).send({
                 error: `La password de administrador ingresada no es válida`,
                 msg: false,
@@ -558,7 +558,7 @@ router.delete("/purgePetsWithFalseUser", jwtMiddleware_1.default, (req, res) => 
             throw new Error(`La password enviada por body es falsy`);
         }
         if (password !== process.env.ADMIN_PASSWORD) {
-            console.log(`La password "${password}" es inválida`);
+            console.log(`La password es inválida`);
             return res.status(401).send(`Password inválida.`);
         }
         let allThePets = yield (0, petAuxFn_1.getAllPets)();
