@@ -79,15 +79,8 @@ router.post("/deleteUser", jwtCheck, async (req: any, res) => {
         );
     }
   } catch (error: any) {
-    console.log(`Error en /admin/deleteUser. ${error.message}`);
-    // await db.Action.create({
-    //   admin_id: req.auth?.sub,
-    //   route: `/admin/deleteUser`,
-    //   action: `delete User with id "${req.body.id}" and email "${req.body.email}"`,
-    //   action_status: 404,
-    //   error_msg: `${error.message}`,
-    // });
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -149,8 +142,8 @@ router.post("/cleanPostsOfUserId", jwtCheck, async (req: any, res) => {
       .status(200)
       .send(`Número de posts destruidos: ${numberOfPostsDestroyed}`);
   } catch (error: any) {
-    console.log(`Error en la ruta /admin/cleanPostsOfUserId. ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -209,8 +202,8 @@ router.post("/cleanReviewsToUser", jwtCheck, async (req: any, res) => {
       .status(200)
       .send(`Cantidad de reviews soft destroyed: ${reviewsErased}`);
   } catch (error: any) {
-    console.log(`Error en /cleanReviewsToUser. ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -268,7 +261,8 @@ router.post("/deletePetsWithNoUserId", jwtCheck, async (req: any, res) => {
       .status(200)
       .send(`Cantidad de Mascotas/Posts eliminados: ${petsDestroyed}.`);
   } catch (error: any) {
-    console.log(`Error en /admin/deletePetsWithNoUserId. ${error.message}`);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -317,7 +311,8 @@ router.post("/deletePet", jwtCheck, async (req: any, res) => {
     });
     return res.status(404).send("la publicación no existe");
   } catch (error: any) {
-    console.log(`Error en /admin/deletePets ${error.message}`);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -379,7 +374,7 @@ router.put("/setIsAdmin", jwtCheck, async (req: any, res) => {
     });
   } catch (error: any) {
     console.log(`Error en ruta admin/setIsAdmin. ${error.message}`);
-    return res.status(400).send({ error: `${error.message}` });
+    return res.status(400).send({ error: `Algo salió mal :(` });
   }
 });
 // SET IS SUPER ADMIN. SÓLO LA PUEDE USAR UN SUPER ADMIN.
@@ -441,8 +436,8 @@ router.put("/setIsSuperAdmin", jwtCheck, async (req: any, res) => {
       msg: `Usuario con id ${idOfUserToSetIsSuperAdminProp} fue seteado a isAdmin = ${newIsSuperAdminValue}.`,
     });
   } catch (error: any) {
-    console.log(`Error en ruta admin/setIsAdmin. ${error.message}`);
-    return res.status(400).send({ error: `${error.message}` });
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -472,7 +467,7 @@ router.post("/hasAdminPowers", jwtCheck, async (req: any, res) => {
     }
   } catch (error: any) {
     console.log(`Error en "admin/hasAdminPowers". ${error.message}`);
-    return res.status(400).send({ error: `${error.message}`, msg: false });
+    return res.status(400).send({ error: `Algo salió mal.`, msg: false });
   }
 });
 
@@ -496,8 +491,8 @@ router.get("/createMultiplier", jwtCheck, async (req: any, res) => {
     }
     return res.send("el multiplicador ya existe");
   } catch (error: any) {
-    console.log(`Error en /admin/changeMultiplier. ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 router.post("/changeMultiplier", jwtCheck, async (req: any, res) => {
@@ -543,8 +538,8 @@ router.post("/changeMultiplier", jwtCheck, async (req: any, res) => {
       .status(200)
       .send(`multiplicador cambiado. Valor actual = ${multiplier.number}`);
   } catch (error: any) {
-    console.log(`Error en /admin/changeMultiplier. ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -572,8 +567,8 @@ router.post("/mutateActiveToActivo", jwtCheck, async (req, res) => {
     }
     return res.status(200).send({ transactionsModified: `${numberModified}` });
   } catch (error: any) {
-    console.log(`Error en el /admin/mutateActiveToActivo`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 router.post("/banUser", jwtCheck, async (req: any, res) => {
@@ -628,8 +623,8 @@ router.post("/banUser", jwtCheck, async (req: any, res) => {
     });
     return res.status(404).send("el usuario no existe");
   } catch (error: any) {
-    console.log(`Error en /admin/banUser. ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -689,8 +684,8 @@ router.delete("/purgePetsWithFalseUser", jwtCheck, async (req: any, res) => {
       .status(200)
       .send(`Cantidad de mascotas destruidas: ${numberOfPetsPurged}`);
   } catch (error: any) {
-    console.log(`Error en admin/purgePetsWithFalseUser. ${error.message}`);
-    return res.status(400).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -716,7 +711,7 @@ router.post("/getAdminActions", jwtCheck, async (req: any, res) => {
     return res.status(200).send(allTheAdminActions);
   } catch (error: any) {
     console.log(`Error en "admin/getAdminActions". ${error.message}`);
-    return res.status(400).send({ error: error.message });
+    return res.status(400).send({ error: "Algo salió mal." });
   }
 });
 

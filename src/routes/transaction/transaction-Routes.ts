@@ -17,8 +17,8 @@ router.get("/allTransactions", async (req, res) => {
     let allTransactions = await getAllTransactions();
     return res.status(200).send(allTransactions);
   } catch (error: any) {
-    console.log(`Error en /transactions/allTransactions`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -30,8 +30,8 @@ router.get("/transactionsCompleted", async (req, res) => {
     });
     return res.status(200).send(transactionsCompleted);
   } catch (error: any) {
-    console.log(`Error en /transactions/transactionsCompleted`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -177,8 +177,8 @@ router.post("/postSuccess", jwtCheck, async (req: any, res) => {
       "No puedes modificar el estado de esta mascota porque no eres quién la publicó."
     );
   } catch (error: any) {
-    console.log(`Error en /transactions/postSuccess. ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -222,8 +222,8 @@ router.post("/cancelPost", jwtCheck, async (req: any, res) => {
       "No puedes modificar el estado de esta mascota porque no eres quién la publicó."
     );
   } catch (error: any) {
-    console.log(`Error en /Transactions/cancelPost. ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -241,8 +241,8 @@ router.post("/getUserTransactions", jwtCheck, async (req: any, res) => {
 
     return res.status(200).send(userTransactions);
   } catch (error: any) {
-    console.log(`Error en /Transactions/allTransactions. ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -312,8 +312,8 @@ router.post("/newTransaction", jwtCheck, async (req: any, res) => {
       .status(200)
       .send({ msg: "nueva transacción creada", createdTransaction });
   } catch (error: any) {
-    console.log(`Error en /Transactions/allTransactions. ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -339,8 +339,8 @@ router.put("/transactionCheck", jwtCheck, async (req: any, res) => {
 
     res.status(200).send({ msg: "status checked" });
   } catch (error: any) {
-    console.log(`Error en /Transactions/allTransactions`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
