@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import { rateLimiter } from "../config/rateLimiter";
-import { corsOptions } from "../config/corsOptions";
 import usersRouter from "./routes/user/user-Routes";
 import animalRouter from "./routes/pet/pet-Routes";
 import checkoutRouter from "./routes/checkout/checkout-Routes";

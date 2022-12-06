@@ -61,9 +61,8 @@ router.post("/postNewPet", jwtCheck, async (req: any, res) => {
       }
     }
   } catch (error: any) {
-    console.log(`Error en /postnewpet. ${error.message}`);
-    console.log(`req.auth.sub de la request = '${req.auth?.sub}'`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -88,8 +87,8 @@ router.put("/update", jwtCheck, async (req: any, res) => {
 
     return res.status(200).send(newProfile);
   } catch (error: any) {
-    console.log(`Error en la ruta "/pets/update". ${error.message}`);
-    return res.status(400).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -101,31 +100,34 @@ router.get("/numberOfPetsInDB", async (req, res) => {
     let numberOfPetsInDBtoString = `${numberOfPetsInDB}`;
     return res.status(200).send(numberOfPetsInDBtoString);
   } catch (error: any) {
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
 //GET ALL SPECIES:
-router.get("/especies", async (_req, res) => {
+router.get("/especies", async (req, res) => {
   console.log("entré al GET pets/especies");
   try {
     let speciesArray = mapSpecies();
     console.log(`species Array = ${speciesArray}`);
     return res.status(200).send(speciesArray);
   } catch (error: any) {
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
 //GET ALL PETS:
-router.get("/", async (_req, res) => {
+router.get("/", async (req, res) => {
   console.log("entré al GET pets/ ");
   try {
     let allThePetsNotTransacted = await getAllActivePets();
     // console.log(allThePets);
     return res.status(200).send(allThePetsNotTransacted);
   } catch (error: any) {
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -138,7 +140,8 @@ router.get("/perros", async (req, res) => {
     let notTransactedDogs = excludePetsTransacted(dogsFromDB);
     return res.status(200).send(notTransactedDogs);
   } catch (error: any) {
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -151,7 +154,8 @@ router.get("/gatos", async (req, res) => {
     let notTransactedCats = excludePetsTransacted(catsFromDB);
     return res.status(200).send(notTransactedCats);
   } catch (error: any) {
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -164,7 +168,8 @@ router.get("/otra", async (req, res) => {
     let notTransactedOtherSpec = excludePetsTransacted(otherSpeciesFromDB);
     return res.status(200).send(notTransactedOtherSpec);
   } catch (error: any) {
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -177,7 +182,8 @@ router.get("/perdido", async (req, res) => {
     let notTransactedLostPets = excludePetsTransacted(allLostFromDB);
     return res.status(200).send(notTransactedLostPets);
   } catch (error: any) {
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -190,7 +196,8 @@ router.get("/encontrado", async (req, res) => {
     let notTransactedFoundPets = excludePetsTransacted(allFoundFromDB);
     return res.status(200).send(notTransactedFoundPets);
   } catch (error: any) {
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -203,7 +210,8 @@ router.get("/adopcion", async (req, res) => {
     let notTransactedInAdoptionPets = excludePetsTransacted(allInAdoptionDB);
     return res.status(200).send(notTransactedInAdoptionPets);
   } catch (error: any) {
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -216,10 +224,8 @@ router.get("/search", async (req, res) => {
     let notTransactedResultPets = excludePetsTransacted(result);
     return res.status(200).send(notTransactedResultPets);
   } catch (error: any) {
-    console.log(
-      `Hubo un error ruta GET pets/search. Error message: ${error.message}`
-    );
-    return error.message;
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -231,8 +237,8 @@ router.get("/success", async (req, res) => {
     });
     return res.send(pets);
   } catch (error: any) {
-    console.log(`retornando error en GET pets/success ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -242,10 +248,8 @@ router.get("/successAdoptions", async (req, res) => {
     const pets = await db.Animal.findAll({ where: { withNewOwner: "true" } });
     res.send(pets);
   } catch (error: any) {
-    console.log(
-      `retornando error en GET pets/successAdoptions ${error.message}`
-    );
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -257,8 +261,8 @@ router.get("/successFound", async (req, res) => {
     });
     res.send(pets);
   } catch (error: any) {
-    console.log(`retornando error en GET pets/successFound ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -274,8 +278,8 @@ router.post("/subscribe", async (req, res) => {
     console.log("soy subscription y id ", subscription, id);
     return res.status(200).send("Subscripción creada correctamente");
   } catch (error: any) {
-    console.log(`Error en pets/subscribe. ${error.message}`);
-    return res.status(400).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -290,8 +294,8 @@ router.post("/desubscribe", async (req, res) => {
     console.log(`El endpoint del usuario con id ${id} ha sido seteado a null.`);
     res.status(200).send(`Subscripción borrada exitosamente ${usuario}`);
   } catch (error: any) {
-    console.log("fallo /desubscribe");
-    return res.status(400).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 
@@ -333,8 +337,8 @@ router.get("/:id", async (req, res) => {
     let petFoundById = await getPetById(paramsID);
     return res.status(200).send(petFoundById);
   } catch (error: any) {
-    console.log(`retornando error en GET pets/:id: ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send("Lo siento. Hubo un error.");
   }
 });
 

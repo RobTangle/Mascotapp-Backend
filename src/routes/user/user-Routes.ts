@@ -42,21 +42,6 @@ const authCheck = (req: any, res: any, next: any) => {
 
 // ----- ------ ------- RUTAS :  ------ ------- -------
 
-//GET ALL USERS FROM DB:  //! Hay que dejarla comentada ( o borrarla) porque no es seguro poder tener toda la data de los users registrados:
-
-router.get("/", jwtCheck, async (req, res) => {
-  console.log("entré al get de Users!");
-
-  try {
-    let allTheUsers = await getAllUsers();
-    // console.log(allTheUsers);
-
-    return res.status(200).send(allTheUsers);
-  } catch (error: any) {
-    return res.status(404).send(error.message);
-  }
-});
-
 // GET NUMBER OF USERS IN DB:
 router.get("/numberOfUsersInDB", async (req, res) => {
   console.log("Entré a la route /numberOfUsersInDB");
@@ -66,7 +51,8 @@ router.get("/numberOfUsersInDB", async (req, res) => {
     let numberOfUsersInDBtoString = `${numberOfUsersInDB}`;
     return res.status(200).send(numberOfUsersInDBtoString);
   } catch (error: any) {
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send({ msg: "Lo siento. Hubo un error." });
   }
 });
 
@@ -99,8 +85,8 @@ router.get("/contactinfo/:petid", async (req, res) => {
     console.log(`contactInfoOfOwner = ${contactInfoOfOwner}`);
     return res.status(200).send(contactInfoOfOwner);
   } catch (error: any) {
-    console.log(`error en /contactinfo/:petid = ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send({ msg: "Lo siento. Hubo un error." });
   }
 });
 
@@ -139,8 +125,8 @@ router.get("/getallpetsofuser", jwtCheck, async (req: any, res) => {
       return res.status(200).send(petsPostedByUser);
     }
   } catch (error: any) {
-    console.log(`error en el /users/getallpetsofusers: ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send({ msg: "Lo siento. Hubo un error." });
   }
 });
 
@@ -172,8 +158,8 @@ router.delete("/deletePet", jwtCheck, async (req: any, res) => {
         .send(`El ID del cliente no coincide con el UserId de la mascota.`);
     }
   } catch (error: any) {
-    console.log(`Hubo un error en el users/deletepet = ${error.message}`);
-    return res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send({ msg: "Lo siento. Hubo un error." });
   }
 });
 
@@ -218,8 +204,8 @@ router.post("/newuser", jwtCheck, async (req: any, res) => {
       return res.status(200).send(newUserCreated);
     }
   } catch (error: any) {
-    console.log(error.message);
-    res.status(404).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send({ msg: "Lo siento. Hubo un error." });
   }
 });
 
@@ -244,8 +230,8 @@ router.get("/exists", jwtCheck, async (req: any, res) => {
       return res.send({ msg: true });
     }
   } catch (error: any) {
-    console.log(`Error en users/exists. ${error.message}`);
-    return res.status(404).send(error);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send({ msg: "Lo siento. Hubo un error." });
   }
 });
 
@@ -273,8 +259,9 @@ router.put("/update", jwtCheck, async (req: any, res) => {
     console.log(`Perfil de usuario actualizado: `);
     console.log(newProfile);
     return res.status(200).send(newProfile);
-  } catch (error) {
-    res.status(400).send(error);
+  } catch (error: any) {
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send({ msg: "Lo siento. Hubo un error." });
   }
 });
 
@@ -301,8 +288,8 @@ router.get("/getMultipleUserInfo", jwtCheck, async (req: any, res) => {
       throw new Error(`El id '${req.auth.sub}' es falso.`);
     }
   } catch (error: any) {
-    console.log(`Error en /users/getMultipleUserInfo. ${error.message}`);
-    return res.status(400).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send({ msg: "Lo siento. Hubo un error." });
   }
 });
 
@@ -319,8 +306,8 @@ router.get("/ranking", async (req, res) => {
 
     res.status(200).send(topTen);
   } catch (error: any) {
-    console.log(`Error en /users/ranking. ${error.message}`);
-    return res.status(400).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send({ msg: "Lo siento. Hubo un error." });
   }
 });
 
@@ -335,8 +322,8 @@ router.get("/points", jwtCheck, async (req: any, res) => {
     console.log(`No se encontró al usuario por id`);
     return res.status(200).send("no existe el usuario");
   } catch (error: any) {
-    console.log(`Error en /users/points ${error.message}`);
-    return res.status(400).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send({ msg: "Lo siento. Hubo un error." });
   }
 });
 
@@ -353,8 +340,8 @@ router.get("/rankingGaveAdoption", async (req, res) => {
 
     res.status(200).send(topTen);
   } catch (error: any) {
-    console.log(`Error en /users/rankingGaveAdoption. ${error.message}`);
-    return res.status(400).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send({ msg: "Lo siento. Hubo un error." });
   }
 });
 
@@ -451,8 +438,8 @@ router.post("/buyProducts", jwtCheck, async (req: any, res) => {
 
     return res.status(404).send("el usuario no existe");
   } catch (error: any) {
-    console.log(`Error en /users/buyProducts. ${error.message}`);
-    return res.status(400).send(error.message);
+    console.log(`Error en ${req.path}. ${error.message}`);
+    return res.status(400).send({ msg: "Lo siento. Hubo un error." });
   }
 });
 
@@ -487,7 +474,7 @@ router.post("/donatePoints", jwtCheck, async (req: any, res) => {
       msg: "Lo siento. Algo salió mal. Es posible que el usuario al que quiere donarle ya no exista más.",
     });
   } catch (error: any) {
-    console.log(`Error en /users/donatePoints. ${error.message}`);
+    console.log(`Error en ${req.path}. ${error.message}`);
     return res.status(400).send({ msg: "Lo siento. Hubo un error." });
   }
 });
